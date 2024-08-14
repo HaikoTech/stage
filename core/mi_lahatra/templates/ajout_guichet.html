@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+
+{% block title %}
+  mi_lahatra
+{% endblock %}
+
+
+{% block content %}
+  <h3>Ajouter</h3>
+
+  <form action="/ajouter_guichet/ajouter" method="post">
+  {% csrf_token %}
+  <input class="input_main" name="input_nom">
+
+  <br><br>
+  <input class="submit" type="submit" value="Submit">
+  </form>
+{% endblock %}

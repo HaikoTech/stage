@@ -4,4 +4,13 @@ body{
 }
 #bienvenue{
     color: rgb(13, 39, 13);
+    font-size: 50px;
+}
+.input_main{
+    padding: 10px;
+}
+.sumbit{
+    font-size: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }

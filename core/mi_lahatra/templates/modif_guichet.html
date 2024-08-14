@@ -1,0 +1,13 @@
+{% block title %}
+  mi_lahatra
+{% endblock %}
+
+{% block content %}
+<form action="/modif_guichet/modification/{{ g.id }}" method="post">
+    {% csrf_token %}
+    Nom:<br>
+    <input name="nom" value="{{ g.nom }}">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}

@@ -6,5 +6,25 @@
 
 
 {% block content %}
-  <h1 id="bienvenue">Bienvenue dans mi_lahatra</h1>
+  <h1 id="bienvenue">mi-lahatra</h1>
+
+
+  <h3>Entrer votre nom</h3>
+
+  <form action="/ajouter_personne" method="post">
+  {% csrf_token %}
+  <input class="input_main" name="input_nom">
+
+
+  <h3>Où est-ce que vous voudriez aller ?</h3>
+
+  <select class="input_main" name="input_guichet">
+    {% for g in g %}
+    <option value="{{ g.nom }}">{{ g.nom }}</option>
+    {% endfor %}
+  </select>
+
+  <br><br>
+  <input class="submit" type="submit" value="Submit">
+  </form>
 {% endblock %}

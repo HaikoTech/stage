@@ -1,0 +1,34 @@
+
+
+{% block content %}
+<a href="/">retour</a>
+<h1>Guichet</h1>
+<a href="/ajouter_guichet">Ajout d'un guichet</a>
+<br>
+
+<table border="1">
+{% for g in g %}
+<tr>
+<td>{{ g.id }}</td>
+<td>{{ g.nom }}</td>
+<td><a href="/suppr_guichet/{{ g.id }}">supprimer</a></td>
+<td><a href="/modif_guichet/{{ g.id }}">modifier</a></td>
+</tr>
+{% endfor %}
+</table>
+
+<h1>Personne</h1>
+
+<table border="1">
+{% for p in p %}
+<tr>
+<td>{{ p.id }}</td>
+<td>{{ p.nom }}</td>
+<td>{{ p.guichet }}</td>
+<td><a href="/suppr_personne/{{ p.id }}">supprimer</a></td>
+<td><a href="/modif_personne/{{ p.id }}">modifier</a></td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}
