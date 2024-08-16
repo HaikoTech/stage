@@ -20,4 +20,6 @@ urlpatterns = [
 
     path('modif_personne/<int:id>', app.modif_personne),
     path('modif_personne/modification/<int:id>', app.modif_personne_m),
+
+    path('attente', app.attente_main),
 ]

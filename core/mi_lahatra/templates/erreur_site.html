@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+
+{% block title %}
+  ERREUR
+{% endblock %}
+
+
+{% block content %}
+<div id="message">{{ message }}</div>
+<script type="text/javascript">
+    let page = {{ page }}
+    alert
+    window.onload = function() {
+        setTimeout(function(){
+            window.location.href = page;
+        }, 2000);
+    }
+</script>
+{% endblock %}

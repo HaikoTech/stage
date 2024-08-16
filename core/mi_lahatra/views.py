@@ -3,6 +3,7 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.db.models import Q
 
 from mi_lahatra.models import Guichet
 from mi_lahatra.models import Personne
@@ -13,6 +14,17 @@ class Application():
     @staticmethod
     def attente(request):
         template = loader.get_template('main.html')
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+        context = {
+            'g': guichet,
+            'p': pers,
+        }
+        return HttpResponse(template.render(context, request))
+    
+    @staticmethod
+    def attente_main(request):
+        template = loader.get_template('attente.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
         context = {
@@ -37,32 +49,46 @@ class Application():
         x = request.POST['input_nom']
         y = request.POST['input_guichet']
         pers = Personne(nom=x, guichet=y)
+        guichet = Guichet.objects.get(nom=y)
+        guichet.nb_now += 1
+        pers.numero = guichet.nb_now
         pers.save()
-        
-        template = loader.get_template('base.html')
+        guichet.save()
+
+        fin = f"{guichet.alpha}{pers.numero:03}"
+         
+        template = loader.get_template('main.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
         context = {
             'g': guichet,
             'p': pers,
+            'fin': fin,
         }
         return HttpResponse(template.render(context, request))
     
     @staticmethod
     def ajout_guichet(request):
         template = loader.get_template('ajout_guichet.html')
-        guichet = Guichet.objects.all().values()
+        guichet = Guichet.objects.all().values_list('alpha', flat=True)
         pers = Personne.objects.all().values()
+        a = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] 
+
+        a_filtered = [char for char in a if char not in guichet]
+        guichet = Guichet.objects.all().values()
+
         context = {
             'g': guichet,
             'p': pers,
+            'alpha': a_filtered,
         }
         return HttpResponse(template.render(context, request))
     
     @staticmethod
     def ajout_guichet_ajout(request):
         x = request.POST['input_nom']
-        gui = Guichet(nom=x)
+        a = request.POST['input_alpha']
+        gui = Guichet(nom=x, alpha=a)
         gui.save()
         
         template = loader.get_template('base.html')
@@ -77,6 +103,11 @@ class Application():
     @staticmethod
     def suppr_personne(request, id):
         pers = Personne.objects.get(id=id)
+        guich = pers.guichet
+        guichet = Guichet.objects.get(nom=guich)
+        guichet.nb_now -= 1
+
+        guichet.save()
         pers.delete()
         
         template = loader.get_template('base.html')
@@ -108,33 +139,59 @@ class Application():
     def modif_guichet(request, id):
         mymember = Guichet.objects.get(id=id)
         template = loader.get_template('modif_guichet.html')
+
+        guichet = Guichet.objects.all().values_list('alpha', flat=True)
+        a = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] 
+
+        a_filtered = [char for char in a if char not in guichet]
+
         context = {
             'g': mymember,
+            'alpha': a_filtered,
         }
         return HttpResponse(template.render(context, request))
     
     @staticmethod
     def modif_guichet_m(request, id):
+        nom_2 = ""
         nom = request.POST['nom']
+        alpha = request.POST['alpha']
         member = Guichet.objects.get(id=id)
-        try:
-            pers = Personne.objects.get(guichet=member.nom)
-            pers.guichet = nom
-            pers.save()
-        except:
-            pass
-        
-        member.nom = nom
-        member.save()
+        all_member = Guichet.objects.filter(nom=nom).filter(~Q(id=id)).filter(~Q(alpha=alpha)).values()
 
-        template = loader.get_template('base.html')
-        guichet = Guichet.objects.all().values()
-        pers = Personne.objects.all().values()
-        context = {
-            'g': guichet,
-            'p': pers,
-        }
-        return HttpResponse(template.render(context, request))
+        for i in all_member:
+            nom_2 += str(i) + " | "
+        
+        if nom_2 != "" and nom_2 != nom:
+            mymember = Guichet.objects.get(id=id)
+            template = loader.get_template('modif_guichet.html')
+            context = {
+                'g': mymember,
+            }
+            return HttpResponse(template.render(context, request))
+
+        else:
+            # return HttpResponse("Aucun nom")
+
+            try:
+                pers = Personne.objects.get(guichet=member.nom)
+                pers.guichet = nom
+                pers.save()
+            except:
+                pass
+            
+            member.nom = nom
+            member.alpha = alpha
+            member.save()
+
+            template = loader.get_template('base.html')
+            guichet = Guichet.objects.all().values()
+            pers = Personne.objects.all().values()
+            context = {
+                'g': guichet,
+                'p': pers,
+            }
+            return HttpResponse(template.render(context, request))
     
     @staticmethod
     def modif_personne(request, id):
@@ -149,9 +206,11 @@ class Application():
     def modif_personne_m(request, id):
         nom = request.POST['nom']
         gui = request.POST['guichet']
+        num = request.POST['numero']
         member = Personne.objects.get(id=id)
         member.nom = nom
         member.guichet = gui
+        member.numero    = num
         member.save()
         
         template = loader.get_template('base.html')
@@ -162,3 +221,4 @@ class Application():
             'p': pers,
         }
         return HttpResponse(template.render(context, request))
+    

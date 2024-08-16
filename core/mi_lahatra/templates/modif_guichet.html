@@ -1,13 +1,17 @@
-{% block title %}
-  mi_lahatra
-{% endblock %}
 
 {% block content %}
+<a href="/base">annuler</a>
 <form action="/modif_guichet/modification/{{ g.id }}" method="post">
     {% csrf_token %}
     Nom:<br>
     <input name="nom" value="{{ g.nom }}">
     <br><br>
+    Id<br>
+    <select class="input_main" name="alpha">
+      {% for a in alpha %}
+      <option value="{{ a }}">{{ a }}</option>
+      {% endfor %}
+    </select>
     <input type="submit" value="Submit">
 </form>
 {% endblock %}

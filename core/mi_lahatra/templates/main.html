@@ -8,12 +8,17 @@
 {% block content %}
   <h1 id="bienvenue">mi-lahatra</h1>
 
+  {% if fin and fin != "" %}
+  <script>
+    alert("Merci de votre patience, nous vous appellerons bientôt par ce numero:\n\n{{ fin }}")
+  </script>
+  {% endif %}
 
   <h3>Entrer votre nom</h3>
 
   <form action="/ajouter_personne" method="post">
   {% csrf_token %}
-  <input class="input_main" name="input_nom">
+  <input class="input_main" name="input_nom" required>
 
 
   <h3>Où est-ce que vous voudriez aller ?</h3>

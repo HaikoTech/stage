@@ -6,12 +6,20 @@
 
 
 {% block content %}
-  <h3>Ajouter</h3>
+  <h2>Ajouter</h2>
 
+  
   <form action="/ajouter_guichet/ajouter" method="post">
-  {% csrf_token %}
+    {% csrf_token %}
+  <h3>Nom</h3>
   <input class="input_main" name="input_nom">
-
+  <br>
+  <h3>Alpha</h3>
+  <select class="input_main" name="alpha">
+    {% for a in alpha %}
+        <option value="{{ al }}">{{ a }}</option>
+    {% endfor %}
+  </select>
   <br><br>
   <input class="submit" type="submit" value="Submit">
   </form>

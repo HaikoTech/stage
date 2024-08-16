@@ -14,3 +14,9 @@ body{
     padding-left: 20px;
     padding-right: 20px;
 }
+#top_att{
+    background-color: rgb(14, 133, 10);
+}
+#uppercaseInput {
+    text-transform: uppercase;
+}

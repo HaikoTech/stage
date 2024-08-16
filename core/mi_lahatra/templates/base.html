@@ -7,28 +7,49 @@
 <br>
 
 <table border="1">
+    <tr>
+    <td>id</td>
+    <td>alpha</td>
+    <td>nom</td>
+    <td>nb de Personne</td>
+    </tr>
 {% for g in g %}
-<tr>
-<td>{{ g.id }}</td>
-<td>{{ g.nom }}</td>
-<td><a href="/suppr_guichet/{{ g.id }}">supprimer</a></td>
-<td><a href="/modif_guichet/{{ g.id }}">modifier</a></td>
-</tr>
+    <tr>
+    <td>{{ g.id }}</td>
+    <td>{{ g.alpha }}</td>
+    <td>{{ g.nom }}</td>
+    <td>{{ g.nb_now }}</td>
+    <td><a href="/suppr_guichet/{{ g.id }}">supprimer</a></td>
+    <td><a href="/modif_guichet/{{ g.id }}">modifier</a></td>
+    </tr>
 {% endfor %}
 </table>
 
 <h1>Personne</h1>
 
-<table border="1">
-{% for p in p %}
-<tr>
-<td>{{ p.id }}</td>
-<td>{{ p.nom }}</td>
-<td>{{ p.guichet }}</td>
-<td><a href="/suppr_personne/{{ p.id }}">supprimer</a></td>
-<td><a href="/modif_personne/{{ p.id }}">modifier</a></td>
-</tr>
+{% for g in g %}
+    <h2>{{ g.nom }}</h2>
+    <table border="1">
+        <tr>
+        <td>id</td>
+        <td>nom</td>
+        <td>numero</td>
+        <td>guichet</td>
+        </tr>
+    {% for p in p %}
+        {% if p.guichet == g.nom %}
+            <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.nom }}</td>
+            <td>{{ p.numero }}</td>
+            <td>{{ p.guichet }}</td>
+            <td><a href="/suppr_personne/{{ p.id }}">supprimer</a></td>
+            <td><a href="/modif_personne/{{ p.id }}">modifier</a></td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </table>
 {% endfor %}
-</table>
+
 
 {% endblock %}
