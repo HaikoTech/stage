@@ -51,6 +51,7 @@ class Application():
         pers = Personne(nom=x, guichet=y)
         guichet = Guichet.objects.get(nom=y)
         guichet.nb_now += 1
+        guichet.nb_personne += 1
         pers.numero = guichet.nb_now
         pers.save()
         guichet.save()
@@ -105,7 +106,11 @@ class Application():
         pers = Personne.objects.get(id=id)
         guich = pers.guichet
         guichet = Guichet.objects.get(nom=guich)
-        guichet.nb_now -= 1
+        guichet.nb_now -= 0
+        guichet.nb_personne -= 1
+
+        if guichet.nb_personne == 0 :
+            guichet.nb_now = 0
 
         guichet.save()
         pers.delete()

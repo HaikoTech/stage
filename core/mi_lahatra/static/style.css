@@ -20,3 +20,7 @@ body{
 #uppercaseInput {
     text-transform: uppercase;
 }
+#base_guichet{
+    background-color: greenyellow;
+    border-radius: 20px;
+}

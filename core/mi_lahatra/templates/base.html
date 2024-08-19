@@ -2,30 +2,35 @@
 
 {% block content %}
 <a href="/">retour</a>
-<h1>Guichet</h1>
-<a href="/ajouter_guichet">Ajout d'un guichet</a>
-<br>
+<div id="base_guichet">
+    <h1>Guichet</h1>
+    <a href="/ajouter_guichet">Ajout d'un guichet</a>
+    <br>
+    
+    <table border="1">
+        <tr>
+        <td>id</td>
+        <td>alpha</td>
+        <td>nom</td>
+        <td>id max</td>
+        <td>nb pers</td>
+        </tr>
+    {% for g in g %}
+        <tr>
+        <td>{{ g.id }}</td>
+        <td>{{ g.alpha }}</td>
+        <td>{{ g.nom }}</td>
+        <td>{{ g.nb_now }}</td>
+        <td>{{ g.nb_personne }}</td>
+        <td><a href="/suppr_guichet/{{ g.id }}">supprimer</a></td>
+        <td><a href="/modif_guichet/{{ g.id }}">modifier</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    
+</div>
 
-<table border="1">
-    <tr>
-    <td>id</td>
-    <td>alpha</td>
-    <td>nom</td>
-    <td>nb de Personne</td>
-    </tr>
-{% for g in g %}
-    <tr>
-    <td>{{ g.id }}</td>
-    <td>{{ g.alpha }}</td>
-    <td>{{ g.nom }}</td>
-    <td>{{ g.nb_now }}</td>
-    <td><a href="/suppr_guichet/{{ g.id }}">supprimer</a></td>
-    <td><a href="/modif_guichet/{{ g.id }}">modifier</a></td>
-    </tr>
-{% endfor %}
-</table>
-
-<h1>Personne</h1>
+<h1>Client en attente</h1>
 
 {% for g in g %}
     <h2>{{ g.nom }}</h2>
