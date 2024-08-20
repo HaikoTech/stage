@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+
+{% block title %}
+  Guichet
+{% endblock %}
+
+
+{% block content %}
+  <h1 id="bienvenue" class="back_color_green">Guichet</h1>
+
+    <ul class="liste_guichet">
+      {% for g in g %}
+      <li>
+        <h3><a class="liste_guichet" href="/guichet/{{ g.id }}">{{ g.nom }}</a></h3>
+      </li>
+      {% endfor %}
+
+
+<style>
+    a{
+        text-decoration: none;
+    }
+    .liste_guichet {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .liste_guichet li {
+        background-color: #f4f4f4;
+        border-radius:
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    
+    .liste_guichet li h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .liste_guichet li::hover {
+        color: #222;
+    }
+    
+    .liste_guichet li p {
+        text-align: left;
+    }
+</style>
+{% endblock %}

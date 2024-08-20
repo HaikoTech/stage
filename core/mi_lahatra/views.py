@@ -8,6 +8,8 @@ from django.db.models import Q
 from mi_lahatra.models import Guichet
 from mi_lahatra.models import Personne
 
+from datetime import *
+
 
 class Application():
         
@@ -38,9 +40,14 @@ class Application():
         template = loader.get_template('base.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
+
+        date = datetime.now()
+        date = date.strftime("%d/%m/%Y %H:%M:%S")
+
         context = {
             'g': guichet,
             'p': pers,
+            'date': date,
         }
         return HttpResponse(template.render(context, request))
     
@@ -48,11 +55,15 @@ class Application():
     def ajout_pers(request):
         x = request.POST['input_nom']
         y = request.POST['input_guichet']
+        date = datetime.now()
+        date = date.strftime("%d/%m/%Y %H:%M:%S")
+
         pers = Personne(nom=x, guichet=y)
         guichet = Guichet.objects.get(nom=y)
         guichet.nb_now += 1
         guichet.nb_personne += 1
         pers.numero = guichet.nb_now
+        pers.date_temps = date
         pers.save()
         guichet.save()
 
@@ -102,7 +113,7 @@ class Application():
         return HttpResponse(template.render(context, request))
     
     @staticmethod
-    def suppr_personne(request, id):
+    def suppr_personne(request, page, id):
         pers = Personne.objects.get(id=id)
         guich = pers.guichet
         guichet = Guichet.objects.get(nom=guich)
@@ -115,13 +126,27 @@ class Application():
         guichet.save()
         pers.delete()
         
-        template = loader.get_template('base.html')
-        guichet = Guichet.objects.all().values()
-        pers = Personne.objects.all().values()
-        context = {
-            'g': guichet,
-            'p': pers,
-        }
+        template = loader.get_template(page+".html")
+
+        if page == "guichet_id":
+            guichet = Guichet.objects.get(nom=guich)
+            pers = Personne.objects.filter(guichet=guichet.nom)
+            try:
+                p_now = Personne.objects.earliest('id')
+            except:
+                p_now = "0"
+            context = {
+                'g': guichet,
+                'p': pers,
+                'p_now': p_now,
+            }
+        else:
+            guichet = Guichet.objects.all().values()
+            pers = Personne.objects.all().values()
+            context = {
+                'g': guichet,
+                'p': pers,
+            }
         return HttpResponse(template.render(context, request))
     
     @staticmethod
@@ -227,3 +252,31 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+    @staticmethod
+    def guichet(request):
+        template = loader.get_template('guichet.html')
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+        context = {
+            'g': guichet,
+            'p': pers,
+        }
+        return HttpResponse(template.render(context, request))
+    
+    @staticmethod
+    def guichet_id(request, id):
+        template = loader.get_template('guichet_id.html')
+        guichet = Guichet.objects.get(id=id)
+        pers = Personne.objects.filter(guichet=guichet.nom)
+        try:
+            p_now = Personne.objects.earliest('id')
+        except:
+            p_now = "0"
+
+        context = {
+            'g': guichet,
+            'p': pers,
+            'p_now': p_now,
+            'counter': range(len(pers)),
+        }
+        return HttpResponse(template.render(context, request))

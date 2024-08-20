@@ -12,7 +12,7 @@ urlpatterns = [
     path('ajouter_guichet', app.ajout_guichet),
     path('ajouter_guichet/ajouter', app.ajout_guichet_ajout),
 
-    path('suppr_personne/<int:id>', app.suppr_personne),
+    path('suppr_personne/<str:page>/<int:id>', app.suppr_personne),
     path('suppr_guichet/<int:id>', app.suppr_guichet),
 
     path('modif_guichet/<int:id>', app.modif_guichet),
@@ -22,4 +22,7 @@ urlpatterns = [
     path('modif_personne/modification/<int:id>', app.modif_personne_m),
 
     path('attente', app.attente_main),
+
+    path('guichet', app.guichet),
+    path('guichet/<int:id>', app.guichet_id),
 ]

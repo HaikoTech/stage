@@ -3,6 +3,7 @@
 {% block content %}
 <a href="/">retour</a>
 <div id="base_guichet">
+    <h1>{{ date }}</h1>
     <h1>Guichet</h1>
     <a href="/ajouter_guichet">Ajout d'un guichet</a>
     <br>
@@ -40,6 +41,8 @@
         <td>nom</td>
         <td>numero</td>
         <td>guichet</td>
+        <td>date</td>
+        <td>statut</td>
         </tr>
     {% for p in p %}
         {% if p.guichet == g.nom %}
@@ -48,7 +51,9 @@
             <td>{{ p.nom }}</td>
             <td>{{ p.numero }}</td>
             <td>{{ p.guichet }}</td>
-            <td><a href="/suppr_personne/{{ p.id }}">supprimer</a></td>
+            <td>{{ p.date_temps }}</td>
+            <td>{{ p.statut }}</td>
+            <td><a href="/suppr_personne/base/{{ p.id }}">supprimer</a></td>
             <td><a href="/modif_personne/{{ p.id }}">modifier</a></td>
             </tr>
         {% endif %}

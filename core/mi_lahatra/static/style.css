@@ -24,3 +24,13 @@ body{
     background-color: greenyellow;
     border-radius: 20px;
 }
+
+.back_color_green{
+    background-color: green;
+    border-radius: 20px
+}
+
+.little{
+    margin-left: 20%;
+    margin-right: 20%;
+}

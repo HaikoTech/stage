@@ -14,4 +14,6 @@ class Personne(models.Model):
     nom = models.CharField(max_length=255)
     guichet = models.CharField(max_length=255)
     numero = models.IntegerField()
+    date_temps = models.CharField(max_length=255, default="")
+    statut = models.CharField(max_length=255, default="New")
     
