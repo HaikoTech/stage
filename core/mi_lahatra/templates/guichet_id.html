@@ -8,9 +8,33 @@
 {% block content %} 
     <div style="text-decoration: none; text-align: left"><a href="/guichet">retour</a></div>
     <h1 id="bienvenue" class="back_color_green little">{{ g.nom }}<h1>
-        {% if p_now.id == "" %}
-        <td><a  style="text-decoration: none" href="/suppr_personne/guichet_id/{{ p_now.id }}"><h1>Suivant<h1></a></td> 
-        {% endif %}
+
+        <div class="pers">
+            <table>
+                {% for p in p %}
+                        {% if p.statut == "Load" %}
+                            <tr>
+                                <td><h3>{{ p.nom }}</h3></td>
+                                <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
+                                <td><h5>{{ p.date_temps }}</h5></td>  
+                                <td width="20%"><a style="text-dec%oration: none" href="/suppr_personne/guichet_id/0/{{ g.id }}"><h4>fini</h4></a></td> 
+                            </tr>
+                        {% endif %}
+                            {% empty %}
+                    {% endfor %}
+            </table>
+        </div>
+
+
+            {% if p_now.id == "" %}
+                <td colspan="4">Aucune personne trouvée.</td>
+            {% else %}
+                {% if g.id %}
+                    <td><a  style="text-dec%oration: none" href="/suppr_personne/guichet_id/1/{{ g.id }}"><h4>Suivant</h4></a></td> 
+                {% else %}
+                    <td><a  style="text-dec%oration: none" href="/suppr_personne/guichet_id/1/0"><h4>Suivant</h4></a></td> 
+                {% endif %}             
+            {% endif %}
 
     <table width="100%">
         <tr width="50%">
@@ -18,14 +42,16 @@
                 <div class="pers">
                 <table>
                     {% for p in p %}
+                        {% if p.statut == "New" %}
                             <tr>
                                 <td><h3>{{ p.nom }}</h3></td>
                                 <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
                                 <td><h5>{{ p.date_temps }}</h5></td>  
                             </tr>
+                        {% endif %}
                             {% empty %}
                             <tr>
-                                <td colspan="3">Aucune personne trouvée.</td>
+                                {% comment %} <td colspan="3">Aucune personne trouvée.</td> {% endcomment %}
                             </tr>
                     {% endfor %}
                     </table>

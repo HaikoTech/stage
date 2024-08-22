@@ -113,18 +113,90 @@ class Application():
         return HttpResponse(template.render(context, request))
     
     @staticmethod
-    def suppr_personne(request, page, id):
+    def suppr_personne(request, page, fini, id_guich):
+        try:
+            vraie_guichet = Guichet.objects.get(id=id_guich)
+            guichet = vraie_guichet.nom
+        except:
+            vraie_guichet = {}
+            guichet = {}
+
+        try:
+            pe = Personne.objects.get(statut='Load', guichet=guichet)
+            pe.statut = "End"
+            pe.save()
+
+            # vraie_guichet.nb_personne -= 1
+            # if vraie_guichet.nb_personne <= 0:
+            #     vraie_guichet.nb_now = 0
+
+            # vraie_guichet.save()
+        except:
+            pass
+
+        try:
+            if fini == 1:
+                pers_suiv = Personne.objects.filter(statut='New', guichet=guichet).order_by('id').first()
+                pers_suiv.statut = "Load"
+                pers_suiv.save()
+            elif fini == 0:
+                pass
+
+        except:
+            pass
+
+
+
+        template = loader.get_template(page+'.html')
+        try:
+            pers = Personne.objects.filter(guichet=guichet)
+            p_now = Personne.objects.filter(statut='New', guichet=guichet).order_by('id').first()
+        except:
+            pers = {}
+            p_now = {}
+
+        context = {
+            'g': vraie_guichet,
+            'p': pers,
+            'p_now': p_now,
+        }
+        return HttpResponse(template.render(context, request))
+
+    
+    @staticmethod
+    def suppr_personne_page(request, page, id):
+        template = loader.get_template(page+".html")
+
+        guichet = Guichet.objects.get(id=id)
+        pers = Personne.objects.filter(guichet=guichet.nom)
+        try:
+            p_now = Personne.objects.earliest('id')
+        except:
+            p_now = "0"
+        context = {
+            'g': guichet,
+            'p': pers,
+            'p_now': p_now,
+        }
+        return HttpResponse(template.render(context, request))
+    
+    @staticmethod
+    def suppr_personne_base(request, page, id):
         pers = Personne.objects.get(id=id)
         guich = pers.guichet
         guichet = Guichet.objects.get(nom=guich)
         guichet.nb_now -= 0
         guichet.nb_personne -= 1
 
-        if guichet.nb_personne == 0 :
+        pers.statut = "Load"
+
+        if guichet.nb_personne <= 0:
             guichet.nb_now = 0
+            guichet.nb_personne = 0
 
         guichet.save()
         pers.delete()
+
         
         template = loader.get_template(page+".html")
 
@@ -148,6 +220,9 @@ class Application():
                 'p': pers,
             }
         return HttpResponse(template.render(context, request))
+    
+
+
     
     @staticmethod
     def suppr_guichet(request, id):
@@ -268,15 +343,16 @@ class Application():
         template = loader.get_template('guichet_id.html')
         guichet = Guichet.objects.get(id=id)
         pers = Personne.objects.filter(guichet=guichet.nom)
-        try:
-            p_now = Personne.objects.earliest('id')
-        except:
-            p_now = "0"
+        p_now = Personne.objects.filter(statut='New', guichet=guichet).order_by('id').first()
+
+        p_if = Personne.objects.filter(statut='Load')
 
         context = {
             'g': guichet,
             'p': pers,
             'p_now': p_now,
+            'p_if': p_if,
             'counter': range(len(pers)),
         }
         return HttpResponse(template.render(context, request))
+
