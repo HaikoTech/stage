@@ -1,5 +1,8 @@
 from django.db import models
 
+
+class Date(models.Model):
+    valeur = models.DateField((""), auto_now=False, auto_now_add=False)
 class Guichet(models.Model):
     nom = models.CharField(max_length=255)
     alpha = models.CharField(max_length=1, default="?")

@@ -7,6 +7,7 @@ from django.db.models import Q
 
 from mi_lahatra.models import Guichet
 from mi_lahatra.models import Personne
+from mi_lahatra.models import Date
 
 from datetime import *
 
@@ -14,6 +15,9 @@ class Application():
         
     @staticmethod
     def attente(request):
+        date = Date.objects.all().values()
+        date.valeur = ""
+
         template = loader.get_template('main.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
@@ -46,6 +50,24 @@ class Application():
         context = {
             'g': guichet,
             'p': pers,
+            'date': date,
+        }
+        return HttpResponse(template.render(context, request))
+    
+    @staticmethod
+    def test(request):
+        template = loader.get_template('test.html')
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+
+        date = datetime.now()
+        date_time = date.strftime("%d/%m/%Y %H:%M:%S")
+        date = date.strftime("%d/%m/%Y")
+
+        context = {
+            'g': guichet,
+            'p': pers,
+            'date_time': date_time,
             'date': date,
         }
         return HttpResponse(template.render(context, request))

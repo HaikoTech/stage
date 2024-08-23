@@ -1,5 +1,6 @@
 
 {% extends "index.html" %}
+{% load static %}
 
 {% block title %}
   Guichet
@@ -7,6 +8,7 @@
 
 {% block content %} 
     <div id="main-content">
+        <p style="text-align: left"><img width="90vh" src="{% static 'images/logo.png' %}" alt="Logo"></p>
         <a href="/guichet" class="return-link">Retour</a>
         <h1 id="bienvenue">{{ g.nom }}</h1>
 
@@ -152,7 +154,7 @@
       text-decoration: underline;
     }
     .pers_2{
-        height: 50vh;
+        height: 40vh;
         overflow-y: auto;
     }
 </style>

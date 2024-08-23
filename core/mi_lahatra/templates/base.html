@@ -1,6 +1,12 @@
 {% block content %}
-<a href="/" class="retour">Retour</a>
+{% load static %}
+
+
+    <td style="text-align: left"><a href="/" class="retour">Retour</a></td>
+
+
 <div id="base_guichet">
+    <img width="100vh" src="{% static 'images/logo.png' %}" alt="Logo">
     <h1>{{ date }}</h1>
     <h1>Guichet</h1>
     <a href="/ajouter_guichet" class="ajout_guichet">Ajout d'un guichet</a>
