@@ -10,7 +10,6 @@ from mi_lahatra.models import Personne
 
 from datetime import *
 
-
 class Application():
         
     @staticmethod

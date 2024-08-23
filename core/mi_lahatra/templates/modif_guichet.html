@@ -1,17 +1,114 @@
+{% extends "index.html" %}
+
+{% block title %}
+  Modifier Guichet
+{% endblock %}
 
 {% block content %}
-<a href="/base">annuler</a>
-<form action="/modif_guichet/modification/{{ g.id }}" method="post">
+<div id="tout">
+  <a href="/base" class="retour">Annuler</a>
+  
+  <h1 id="bienvenue">Modifier Guichet</h1>
+  
+  <form action="/modif_guichet/modification/{{ g.id }}" method="post">
     {% csrf_token %}
-    Nom:<br>
-    <input name="nom" value="{{ g.nom }}">
-    <br><br>
-    Id<br>
-    <select class="input_main" name="alpha">
+    
+    <h3>Nom</h3>
+    <input class="input_main" name="nom" value="{{ g.nom }}" required>
+    
+    <h3>Alphabet</h3>
+    <select class="input_main" name="alpha" value="{{ g.alpha }}" required>
       {% for a in alpha %}
-      <option value="{{ a }}">{{ a }}</option>
+      <option value="{{ a }}" {% if a == g.alpha %}selected{% endif %}>{{ a }}</option>
       {% endfor %}
     </select>
-    <input type="submit" value="Submit">
-</form>
+    
+    <br><br>
+    <input class="submit" type="submit" value="Submit">
+  </form>
+</div>
+
+<style>
+    /* Style général pour la page */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #495057;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+      box-sizing: border-box;
+    }
+    
+    /* Conteneur principal */
+    #tout {
+      width: 80%;
+      max-width: 800px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    
+    /* Style pour le titre principal */
+    #bienvenue {
+      color: #ffffff;
+      background-color: #28a745; /* Couleur verte */
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+    
+    /* Style pour les titres de section */
+    h3 {
+      color: #28a745; /* Couleur verte pour les titres */
+      margin-bottom: 10px;
+    }
+    
+    /* Style pour les champs de formulaire */
+    .input_main {
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    
+    /* Style pour le bouton de soumission */
+    .submit {
+      background-color: #28a745; /* Couleur verte */
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .submit:hover {
+      background-color: #218838; /* Couleur verte plus foncée au survol */
+    }
+    
+    /* Style pour le lien d'annulation */
+    .retour {
+      text-decoration: none;
+      color: #28a745; /* Couleur verte */
+      font-weight: bold;
+      display: block;
+      margin-bottom: 20px;
+    }
+    
+    .retour:hover {
+      text-decoration: underline;
+    }
+</style>
 {% endblock %}

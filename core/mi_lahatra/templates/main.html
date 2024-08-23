@@ -4,32 +4,110 @@
   mi_lahatra
 {% endblock %}
 
-
 {% block content %}
-  <h1 id="bienvenue" class="back_color_green">mi-lahatra</h1>
+<div id="tout">
+  <h1 id="bienvenue">mi-lahatra</h1>
 
   {% if fin and fin != "" %}
   <script>
-    alert("Merci de votre patience, nous vous appellerons bientôt par ce numero:\n\n{{ fin }}")
+    alert("Merci de votre patience, nous vous appellerons bientôt par ce numéro:\n\n{{ fin }}")
   </script>
   {% endif %}
 
   <h3>Entrer votre nom</h3>
 
   <form action="/ajouter_personne" method="post">
-  {% csrf_token %}
-  <input class="input_main" name="input_nom" required>
+    {% csrf_token %}
+    <input class="input_main" name="input_nom" required>
 
+    <h3>Où est-ce que vous voudriez aller ?</h3>
 
-  <h3>Où est-ce que vous voudriez aller ?</h3>
+    <select class="input_main" name="input_guichet">
+      {% for g in g %}
+      <option value="{{ g.nom }}">{{ g.nom }}</option>
+      {% endfor %}
+    </select>
 
-  <select class="input_main" name="input_guichet">
-    {% for g in g %}
-    <option value="{{ g.nom }}">{{ g.nom }}</option>
-    {% endfor %}
-  </select>
-
-  <br><br>
-  <input class="submit" type="submit" value="Submit">
+    <br><br>
+    <input class="submit" type="submit" value="Envoyer">
   </form>
+</div>
+
+<style>
+  /* Style général pour la page */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #495057;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  }
+
+  /* Conteneur principal */
+  #tout {
+    width: 90%;
+    max-width: 700px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Style pour le titre principal */
+  #bienvenue {
+    color: #ffffff;
+    background-color: #28a745; /* Couleur verte */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* Style pour les titres de section */
+  h3 {
+    color: #28a745; /* Couleur verte pour les titres */
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+
+  /* Style pour les champs de formulaire */
+  .input_main {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Style pour le bouton de soumission */
+  .submit {
+    background-color: #28a745; /* Couleur verte */
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .submit:hover {
+    background-color: #218838; /* Couleur verte plus foncée au survol */
+  }
+
+  /* Ajouter un peu d'espace avant le formulaire */
+  form {
+    margin-top: 30px;
+  }
+</style>
 {% endblock %}

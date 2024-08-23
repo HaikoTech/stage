@@ -1,77 +1,159 @@
+
 {% extends "index.html" %}
 
 {% block title %}
   Guichet
 {% endblock %}
 
-
 {% block content %} 
-    <div style="text-decoration: none; text-align: left"><a href="/guichet">retour</a></div>
-    <h1 id="bienvenue" class="back_color_green little">{{ g.nom }}<h1>
+    <div id="main-content">
+        <a href="/guichet" class="return-link">Retour</a>
+        <h1 id="bienvenue">{{ g.nom }}</h1>
 
         <div class="pers">
             <table>
                 {% for p in p %}
-                        {% if p.statut == "Load" %}
-                            <tr>
-                                <td><h3>{{ p.nom }}</h3></td>
-                                <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
-                                <td><h5>{{ p.date_temps }}</h5></td>  
-                                <td width="20%"><a style="text-dec%oration: none" href="/suppr_personne/guichet_id/0/{{ g.id }}"><h4>fini</h4></a></td> 
-                            </tr>
-                        {% endif %}
-                            {% empty %}
-                    {% endfor %}
+                    {% if p.statut == "Load" %}
+                        <tr>
+                            <td><h3>{{ p.nom }}</h3></td>
+                            <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
+                            <td><h5>{{ p.date_temps }}</h5></td>  
+                            <td width="20%"><a href="/suppr_personne/guichet_id/0/{{ g.id }}"><h4>Fini</h4></a></td> 
+                        </tr>
+                    {% endif %}
+                {% empty %}
+                {% endfor %}
             </table>
         </div>
 
-
-            {% if p_now.id == "" %}
-                <td colspan="4">Aucune personne trouvée.</td>
+        {% if p_now.id == "" %}
+            <p>Aucune personne trouvée.</p>
+        {% else %}
+            {% if g.id %}
+                <a href="/suppr_personne/guichet_id/1/{{ g.id }}"><h4>Suivant</h4></a>
             {% else %}
-                {% if g.id %}
-                    <td><a  style="text-dec%oration: none" href="/suppr_personne/guichet_id/1/{{ g.id }}"><h4>Suivant</h4></a></td> 
-                {% else %}
-                    <td><a  style="text-dec%oration: none" href="/suppr_personne/guichet_id/1/0"><h4>Suivant</h4></a></td> 
-                {% endif %}             
+                <a href="/suppr_personne/guichet_id/1/0"><h4>Suivant</h4></a>
             {% endif %}
+        {% endif %}
 
-    <table width="100%">
-        <tr width="50%">
-            <td>
-                <div class="pers">
-                <table>
-                    {% for p in p %}
-                        {% if p.statut == "New" %}
-                            <tr>
-                                <td><h3>{{ p.nom }}</h3></td>
-                                <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
-                                <td><h5>{{ p.date_temps }}</h5></td>  
-                            </tr>
-                        {% endif %}
-                            {% empty %}
-                            <tr>
-                                {% comment %} <td colspan="3">Aucune personne trouvée.</td> {% endcomment %}
-                            </tr>
-                    {% endfor %}
-                    </table>
-                </div>
-                    
-            </td>
-        </tr>
-        <tr></tr>
-    </table>
-
+        <table width="100%">
+            <tr>
+                <td>
+                    <div class="pers_2">
+                        <table>
+                            {% for p in p %}
+                                {% if p.statut == "New" %}
+                                    <tr>
+                                        <td><h3>{{ p.nom }}</h3></td>
+                                        <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
+                                        <td><h5>{{ p.date_temps }}</h5></td>  
+                                    </tr>
+                                {% endif %}
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">Aucune personne trouvée.</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 
 <style>
-    .pers{
-        background-color: grey;
-        margin-left: 20%;
-        margin-right: 20%;
-        border-radius: 20px;
-        color: white;
-        padding: 5px;
-        padding-left: 20px;
+    /* Style général pour la page */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #495057;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: auto;
+    }
+    
+    /* Conteneur principal */
+    #main-content {
+      width: 90%;
+      max-width: 800px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      box-sizing: border-box;
+      text-align: center;
+      overflow-y: auto; /* Permet le défilement si le contenu dépasse */
+    }
+    
+    /* Style pour le titre principal */
+    #bienvenue {
+      color: #ffffff;
+      background-color: #28a745; /* Couleur verte */
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    
+    /* Style pour les titres de section */
+    h3 {
+      color: #28a745; /* Couleur verte pour les titres */
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    
+    /* Style pour les champs de formulaire */
+    .input_main {
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin-bottom: 25px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    
+    /* Style pour le bouton de soumission */
+    .submit {
+      background-color: #28a745; /* Couleur verte */
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .submit:hover {
+      background-color: #218838; /* Couleur verte plus foncée au survol */
+    }
+    
+    /* Ajouter un peu d'espace avant le formulaire */
+    form {
+      margin-top: 30px;
+    }
+    
+    /* Style pour le lien de retour */
+    .return-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #28a745; /* Couleur verte */
+      font-size: 18px;
+    }
+    
+    .return-link:hover {
+      text-decoration: underline;
+    }
+    .pers_2{
+        height: 50vh;
+        overflow-y: auto;
     }
 </style>
 {% endblock %}

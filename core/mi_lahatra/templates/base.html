@@ -1,30 +1,30 @@
-
-
 {% block content %}
-<a href="/">retour</a>
+<a href="/" class="retour">Retour</a>
 <div id="base_guichet">
     <h1>{{ date }}</h1>
     <h1>Guichet</h1>
-    <a href="/ajouter_guichet">Ajout d'un guichet</a>
+    <a href="/ajouter_guichet" class="ajout_guichet">Ajout d'un guichet</a>
     <br>
     
-    <table border="1">
+    <table>
         <tr>
-        <td>id</td>
-        <td>alpha</td>
-        <td>nom</td>
-        <td>id max</td>
-        <td>nb pers</td>
+            <th>ID</th>
+            <th>Alpha</th>
+            <th>Nom</th>
+            <th>ID Max</th>
+            <th>Nb Pers</th>
+            <th>Supprimer</th>
+            <th>Modifier</th>
         </tr>
     {% for g in g %}
         <tr>
-        <td>{{ g.id }}</td>
-        <td>{{ g.alpha }}</td>
-        <td>{{ g.nom }}</td>
-        <td>{{ g.nb_now }}</td>
-        <td>{{ g.nb_personne }}</td>
-        <td><a href="/suppr_guichet/{{ g.id }}">supprimer</a></td>
-        <td><a href="/modif_guichet/{{ g.id }}">modifier</a></td>
+            <td>{{ g.id }}</td>
+            <td>{{ g.alpha }}</td>
+            <td>{{ g.nom }}</td>
+            <td>{{ g.nb_now }}</td>
+            <td>{{ g.nb_personne }}</td>
+            <td><a href="/suppr_guichet/{{ g.id }}" class="action_link">Supprimer</a></td>
+            <td><a href="/modif_guichet/{{ g.id }}" class="action_link">Modifier</a></td>
         </tr>
     {% endfor %}
     </table>
@@ -35,31 +35,128 @@
 
 {% for g in g %}
     <h2>{{ g.nom }}</h2>
-    <table border="1">
+    <table>
         <tr>
-        <td>id</td>
-        <td>nom</td>
-        <td>numero</td>
-        <td>guichet</td>
-        <td>date</td>
-        <td>statut</td>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Numéro</th>
+            <th>Guichet</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Supprimer</th>
+            <th>Modifier</th>
         </tr>
     {% for p in p %}
         {% if p.guichet == g.nom %}
             <tr>
-            <td>{{ p.id }}</td>
-            <td>{{ p.nom }}</td>
-            <td>{{ p.numero }}</td>
-            <td>{{ p.guichet }}</td>
-            <td>{{ p.date_temps }}</td>
-            <td>{{ p.statut }}</td>
-            <td><a href="/suppr_personne_base/base/{{ p.id }}">supprimer</a></td>
-            <td><a href="/modif_personne/{{ p.id }}">modifier</a></td>
+                <td>{{ p.id }}</td>
+                <td>{{ p.nom }}</td>
+                <td>{{ p.numero }}</td>
+                <td>{{ p.guichet }}</td>
+                <td>{{ p.date_temps }}</td>
+                <td>{{ p.statut }}</td>
+                <td><a href="/suppr_personne_base/base/{{ p.id }}" class="action_link">Supprimer</a></td>
+                <td><a href="/modif_personne/{{ p.id }}" class="action_link">Modifier</a></td>
             </tr>
         {% endif %}
     {% endfor %}
     </table>
 {% endfor %}
 
-
+<style>
+    /* Style général pour la page */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      color: #495057;
+      box-sizing: border-box;
+    }
+    
+    /* Style pour le lien de retour */
+    .retour {
+      text-decoration: none;
+      color: #28a745;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    
+    .retour:hover {
+      text-decoration: underline;
+    }
+    
+    /* Style pour le lien d'ajout de guichet */
+    .ajout_guichet {
+      text-decoration: none;
+      color: #28a745;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    
+    .ajout_guichet:hover {
+      text-decoration: underline;
+    }
+    
+    /* Conteneur principal */
+    #base_guichet {
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      box-sizing: border-box;
+    }
+    
+    /* Style pour les titres */
+    h1 {
+      text-align: center;
+      color: #28a745;
+    }
+    
+    h2 {
+      color: #28a745;
+      margin-top: 20px;
+    }
+    
+    /* Style pour les tableaux */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #28a745;
+      color: #ffffff;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    
+    /* Style pour les liens dans les tableaux */
+    .action_link {
+      color: #28a745;
+      text-decoration: none;
+    }
+    
+    .action_link:hover {
+      text-decoration: underline;
+    }
+    
+</style>
 {% endblock %}
