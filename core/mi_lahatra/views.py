@@ -116,7 +116,89 @@ class Application():
             return HttpResponse(template.render(context, request))  
 
         
+    @staticmethod
+    def base_c(request):
+        template = loader.get_template('base_change.html')
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+
+        date = datetime.now()
+        date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+        context = {
+            'g': guichet,
+            'p': pers,
+            'date': date,
+        }
+        return HttpResponse(template.render(context, request))
     
+    @staticmethod
+    def base_c_v(request):
+        nom = request.POST['nom']
+        old_mdp = request.POST['old_mdp']
+        new_mdp = request.POST['new_mdp']
+
+        try:
+            admin = Admin.objects.get(nom=nom)
+
+            if admin.mdp == old_mdp:
+                admin.mdp = new_mdp
+                template = loader.get_template('base.html')
+                guichet = Guichet.objects.all().values()
+                pers = Personne.objects.all().values()
+
+                date = datetime.now()
+                date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+                context = {
+                    'g': guichet,
+                    'p': pers,
+                    'date': date,
+                    'admin': admin,
+                    'admin_v': True,
+                }
+                return HttpResponse(template.render(context, request))  
+            else:
+                template = loader.get_template('base_change.html')
+                guichet = Guichet.objects.all().values()
+                pers = Personne.objects.all().values()
+
+                mess = "Le mot de passe est incorecte"
+
+                date = datetime.now()
+                date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+                context = {
+                    'g': guichet,
+                    'p': pers,
+                    'date': date,
+                    'admin': admin,
+                    'message': mess,
+                    'admin_v': True,
+                }
+                return HttpResponse(template.render(context, request))  
+            
+        except:
+            template = loader.get_template('base_change.html')
+            guichet = Guichet.objects.all().values()
+            pers = Personne.objects.all().values()
+
+            mess = "Le nom d'Utilisateur n'existe pas"
+
+            date = datetime.now()
+            date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+            context = {
+                'g': guichet,
+                'p': pers,
+                'date': date,
+                'admin': False,
+                'message': mess,
+                'admin_v': False,
+            }
+            return HttpResponse(template.render(context, request))  
+
+
     @staticmethod
     def test(request):
         template = loader.get_template('test.html')

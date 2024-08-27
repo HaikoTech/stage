@@ -6,26 +6,25 @@
 
 {% block content %}
 <div id="tout">
-  <a href="/base_view/False" class="retour">Annuler</a>
+  <a href="/base_log" class="retour">Annuler</a>
 
 
-  <h1 id="bienvenue">Administrateur</h1>
+  <h1 id="bienvenue">Changer le mot de passe Admin</h1>
   
-  <form action="/base_verified" method="post">
+  <form action="/base_change_v" method="post">
     {% csrf_token %}
     
     <h3>Nom</h3>
     <input class="input_main" name="nom" required>
     
-    <h3>Mot de passe</h3>
-    <input class="input_main" name="mdp" required>
-    <div style="text-align: right">
-        <a href="/base_change">Changer le mot de passe</a>
-    </div>
+    <h3>Ancien Mot de passe</h3>
+    <input class="input_main" name="old_mdp" required>
 
-    {% if admin_v == False %}
-        <p style="color:red">Mot de passe ou Nom incorrect<p>
-        <p style="color:red">Cliquez sur <strong>Annuler</strong> si vous n'êtes pas un administrateur.<p>
+    <h3>Nouveau Mot de passe</h3>
+    <input class="input_main" name="new_mdp" required>
+
+    {% if message != "" %}
+        <p style="color:red">{{ message }}<p>
     {% endif %}
 
     <br><br>

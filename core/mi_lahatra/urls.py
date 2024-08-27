@@ -9,6 +9,8 @@ urlpatterns = [
     path('base', app.base_log),
     path('base_view/<str:admin>', app.base),
     path('base_verified', app.base_v),
+    path('base_change', app.base_c),
+    path('base_change_v', app.base_c_v),
 
     path('ajouter_personne', app.ajout_pers),
     path('ajouter_guichet', app.ajout_guichet),
