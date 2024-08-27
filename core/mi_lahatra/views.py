@@ -8,6 +8,7 @@ from django.db.models import Q
 from mi_lahatra.models import Guichet
 from mi_lahatra.models import Personne
 from mi_lahatra.models import Date
+from mi_lahatra.models import Admin
 
 from datetime import *
 
@@ -39,8 +40,26 @@ class Application():
         return HttpResponse(template.render(context, request))
     
     @staticmethod
-    def base(request):
+    def base(request, admin):
         template = loader.get_template('base.html')
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+
+        date = datetime.now()
+        date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+        context = {
+            'g': guichet,
+            'p': pers,
+            'date': date,
+            'admin': "",
+            'admin_v': admin,
+        }
+        return HttpResponse(template.render(context, request))
+
+    @staticmethod
+    def base_log(request):
+        template = loader.get_template('base_log.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
 
@@ -53,6 +72,50 @@ class Application():
             'date': date,
         }
         return HttpResponse(template.render(context, request))
+    
+    @staticmethod
+    def base_v(request):
+        nom = request.POST['nom']
+        mdp = request.POST['mdp']
+
+        try:
+            admin = Admin.objects.get(nom=nom, mdp=mdp)
+            print(admin.nom)
+            template = loader.get_template('base.html')
+            print("moi")
+            guichet = Guichet.objects.all().values()
+            pers = Personne.objects.all().values()
+
+            date = datetime.now()
+            date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+            context = {
+                'g': guichet,
+                'p': pers,
+                'date': date,
+                'admin': admin,
+                'admin_v': True,
+            }
+            return HttpResponse(template.render(context, request))  
+        except:
+            print("tong ato S except")
+            template = loader.get_template('base_log.html')
+            guichet = Guichet.objects.all().values()
+            pers = Personne.objects.all().values()
+
+            date = datetime.now()
+            date = date.strftime("%d/%m/%Y %H:%M:%S")
+
+            context = {
+                'g': guichet,
+                'p': pers,
+                'date': date,
+                'admin': False,
+                'admin_v': False,
+            }
+            return HttpResponse(template.render(context, request))  
+
+        
     
     @staticmethod
     def test(request):

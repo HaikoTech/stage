@@ -1,19 +1,98 @@
+{% extends "index.html" %}
+
 {% block title %}
-  mi_lahatra
+mi_lahatra
 {% endblock %}
 
-{% block content %}
-<form action="/modif_personne/modification/{{ p.id }}" method="post">
-    {% csrf_token %}
-    Nom:<br>
-    <input name="nom" value="{{ p.nom }}">
-    <br>
-    Guichet:<br>
-    <input name="guichet" value="{{ p.guichet }}">
-    <br><br>
-    numero:<br>
-    <input type="number" name="numero" value="{{ p.numero }}" required>
-    <br><br>
-    <input type="submit" value="Submit">
-</form>
+  {% block content %}
+  <div class="container">
+  <a href="/base_view/True" class="retour">Annuler</a>
+
+    <h1 id="bienvenue">Modifier Client</h1>
+      <form action="/modif_personne/modification/{{ p.id }}" method="post" class="form-style">
+          {% csrf_token %}
+          <div class="form-group">
+              <label for="nom">Nom:</label><br>
+              <input id="nom" name="nom" value="{{ p.nom }}" class="input-field">
+          </div>
+          <div class="form-group">
+              <label for="guichet">Guichet:</label><br>
+              <input id="guichet" name="guichet" value="{{ p.guichet }}" class="input-field">
+          </div>
+          <div class="form-group">
+              <label for="numero">Numéro:</label><br>
+              <input id="numero" type="number" name="numero" value="{{ p.numero }}" required class="input-field">
+          </div>
+          <div class="form-group">
+              <input type="submit" value="Submit" class="submit-button">
+          </div>
+      </form>
+  </div>
+
+<style>
+  /* Assurez-vous d'adapter ces styles à vos besoins spécifiques */
+
+  body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+  }
+  
+  .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+  }
+  
+  h1#bienvenue {
+      color: #4CAF50;
+      margin-bottom: 20px;
+  }
+  
+  .form-style {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+  }
+  
+  .form-group {
+      margin-bottom: 15px;
+  }
+  
+  label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+  }
+  
+  .input-field {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+  }
+  
+  .submit-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+  }
+  
+  .submit-button:hover {
+      background-color: #45a049;
+  }
+  
+</style>
 {% endblock %}

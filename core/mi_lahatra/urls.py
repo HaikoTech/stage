@@ -6,7 +6,9 @@ app = Application()
 urlpatterns = [
     path('', app.attente),
 
-    path('base', app.base),
+    path('base', app.base_log),
+    path('base_view/<str:admin>', app.base),
+    path('base_verified', app.base_v),
 
     path('ajouter_personne', app.ajout_pers),
     path('ajouter_guichet', app.ajout_guichet),

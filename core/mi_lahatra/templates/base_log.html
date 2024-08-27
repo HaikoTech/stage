@@ -6,23 +6,24 @@
 
 {% block content %}
 <div id="tout">
-  <a href="/base_view/True" class="retour">Annuler</a>
+  <a href="/base_view/False" class="retour">Annuler</a>
 
-  <h1 id="bienvenue">Ajouter un guichet</h1>
+  <h1 id="bienvenue">Administrateur</h1>
   
-  <form action="/ajouter_guichet/ajouter" method="post">
+  <form action="/base_verified" method="post">
     {% csrf_token %}
     
     <h3>Nom</h3>
-    <input class="input_main" name="input_nom" required>
+    <input class="input_main" name="nom" required>
     
-    <h3>Alpha</h3>
-    <select class="input_main" name="input_alpha" required>
-      {% for a in alpha %}
-        <option value="{{ a }}">{{ a }}</option>
-      {% endfor %}
-    </select>
-    
+    <h3>Mot de passe</h3>
+    <input class="input_main" name="mdp" required>
+
+    {% if admin_v == False %}
+        <p style="color:red">Mot de passe ou Nom incorrect<p>
+        <p style="color:red">Cliquez sur <strong>Annuler</strong> si vous n'êtes pas un administrateur.<p>
+    {% endif %}
+
     <br><br>
     <input class="submit" type="submit" value="Envoyer">
   </form>
