@@ -16,12 +16,9 @@
             <table>
                 {% for p in p %}
                     {% if p.statut == "Load" %}
-                        <tr>
-                            <td><h3>{{ p.nom }}</h3></td>
-                            <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
-                            <td><h5>{{ p.date_temps }}</h5></td>  
-                            <td width="20%"><a href="/suppr_personne/guichet_id/0/{{ g.id }}"><h4>Fini</h4></a></td> 
-                        </tr>
+                        <div id="personne-list">
+                            {% comment %} Liste de tout les Load {% endcomment %}
+                        </div>
                     {% endif %}
                 {% empty %}
                 {% endfor %}
@@ -45,11 +42,9 @@
                         <table>
                             {% for p in p %}
                                 {% if p.statut == "New" %}
-                                    <tr>
-                                        <td><h3>{{ p.nom }}</h3></td>
-                                        <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td>  
-                                        <td><h5>{{ p.date_temps }}</h5></td>  
-                                    </tr>
+                                    <div id="personne-list-2">
+                                        {% comment %} Liste de tout les New  {% endcomment %}
+                                    </div>
                                 {% endif %}
                                 {% empty %}
                                 <tr>
@@ -62,7 +57,66 @@
             </tr>
         </table>
     </div>
+    <script>
+        $(document).ready(function(){
+            function updateData() {
+                $.ajax({
+                    url: "{% url 'get_personne_data' %}",
+                    method: "GET",
+                    success: function(data) {
+                        // Vider la liste existante avant d'ajouter de nouvelles données
+                        $("#personne-list").empty();
+                        $("#personne-list-2").empty();
+        
+                        // Vérifiez si les données contiennent bien 'p' pour les personnes
+                        var personnes = data.p;
+                        var guichets = data.g;
+        
+                        // Itérez sur les listes de personnes
+                        personnes.forEach(function(personne) {
+                            var guichet = guichets.find(g => g.nom === personne.guichet);  // Recherche le guichet par nom
+                            if (personne.statut == "Load"){
+                                $("#personne-list").append(
+                                    `
+                                        <tr>
+                                        <td><h3>${personne.nom}</h3></td>
+                                        <td width="60%"><h2>${guichet ? guichet.alpha : personne.guichet}${personne.numero.toString().padStart(3, '0')}</h2></td> 
+                                        <td><h5>${ personne.date_temps }</h5></td> 
+                                        <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet.id }"><h4>Fini</h4></a></td> 
+                                        </tr>          
+                                        
+                                    `
+                                );
+                            };
 
+                            if (personne.statut == "New"){
+                                $("#personne-list-2").append(
+                                    `
+                                        <tr>
+                                            <td><h3>${personne.nom}</h3></td>
+                                            <td width="60%"><h2>${guichet ? guichet.alpha : personne.guichet}${personne.numero.toString().padStart(3, '0')}</h2></td>
+                                            <td><h5>${ personne.date_temps }</h5></td>
+                                        </tr>
+                                    `
+                                );
+                            };
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erreur lors de la récupération des données : ", error);
+                    }
+                });
+            }
+        
+            // Appeler la fonction toutes les secondes (1000 millisecondes)
+            setInterval(updateData, 500);
+        });
+        
+        
+    </script>
+    
+    
+      
 <style>
     /* Style général pour la page */
     body {

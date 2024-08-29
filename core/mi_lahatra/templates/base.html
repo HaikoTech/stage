@@ -1,3 +1,4 @@
+{% extends "index.html" %}
 {% block content %}
 {% load static %}
 
@@ -10,7 +11,7 @@
 
 <div id="base_guichet">
     <img width="100vh" src="{% static 'images/logo.png' %}" alt="Logo">
-    <h1>{{ date }}</h1>
+    <h1 id="affiche_date"><!-- Affiche date --></h1>
     <h1>Guichet</h1>
     {% if admin_v == "False" %}
     <a href="#" class="ajout_guichet no-click">Ajout d'un guichet</a>
@@ -85,7 +86,29 @@
     {% endfor %}
     </table>
 {% endfor %}
+<script>
+  $(document).ready(function(){
+    function updateData() {
+        $.ajax({
+            url: "{% url 'get_date_data' %}",
+            method: "GET",
+            success: function(data) {
+                var date = data.date;
+                
+                $("#affiche_date").html(date);
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de la récupération des données : ", error);
+            }
 
+            
+        });
+    }
+
+    setInterval(updateData, 500);
+});
+  
+</script>
 <style>
     /* Style général pour la page */
     body {

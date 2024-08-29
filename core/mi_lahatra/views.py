@@ -1,6 +1,6 @@
 from unittest import loader
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.db.models import Q
@@ -12,13 +12,35 @@ from mi_lahatra.models import Admin
 
 from datetime import *
 
+
 class Application():
         
     @staticmethod
-    def attente(request):
-        date = Date.objects.all().values()
-        date.valeur = ""
+    def get_personne_data(request):
+        personnes = Personne.objects.all().values()
+        personnes_list = list(personnes)
+        guichets = Guichet.objects.all().values()
+        guichets_list = list(guichets)
+        date = datetime.now()
+        date = date.strftime("%d/%m/%Y %H:%M:%S")
 
+        data = {
+            'p': personnes_list,
+            'g': guichets_list,
+            'date': date,
+        }
+
+        return JsonResponse(data, safe=False)
+    
+    @staticmethod
+    def get_date_data(request):
+        date = datetime.now()
+        date_str = date.strftime("%d/%m/%Y %H:%M:%S")
+
+        return JsonResponse({'date': date_str})
+        
+    @staticmethod
+    def attente(request):
         template = loader.get_template('main.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()

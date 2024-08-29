@@ -23,4 +23,3 @@ class Personne(models.Model):
     numero = models.IntegerField()
     date_temps = models.CharField(max_length=255, default="")
     statut = models.CharField(max_length=255, default="New")
-    

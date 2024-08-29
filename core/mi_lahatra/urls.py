@@ -31,4 +31,11 @@ urlpatterns = [
 
     path('guichet', app.guichet),
     path('guichet/<int:id>', app.guichet_id),
+
+    # 
+
+    path('api/personnes/', app.get_personne_data, name='get_personne_data'),
+     path('api/date/', app.get_date_data, name='get_date_data'),
+
+
 ]
