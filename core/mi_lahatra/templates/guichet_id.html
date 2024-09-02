@@ -59,58 +59,59 @@
     </div>
     <script>
         $(document).ready(function(){
-            function updateData() {
+            function updateList() {
+                var g = "{{ g }}";
+                var guichet_nom = "{{ g.nom }}";
+                var p = "{{ p }}";
+                var p_now = "{{ p_now }}";
+                var p_load = "{{ p_load }}";
+                console.log("Début de updateList");
                 $.ajax({
-                    url: "{% url 'get_personne_data' %}",
+                    url: "{% url 'get_personne' %}",
                     method: "GET",
-                    success: function(data) {
-                        // Vider la liste existante avant d'ajouter de nouvelles données
+                    success: function(personne_list) {
+                        console.log("Réponse AJAX reçue", personne_list);
                         $("#personne-list").empty();
                         $("#personne-list-2").empty();
-        
-                        // Vérifiez si les données contiennent bien 'p' pour les personnes
-                        var personnes = data.p;
-                        var guichets = data.g;
-        
-                        // Itérez sur les listes de personnes
-                        personnes.forEach(function(personne) {
-                            var guichet = guichets.find(g => g.nom === personne.guichet);  // Recherche le guichet par nom
-                            if (personne.statut == "Load"){
-                                $("#personne-list").append(
-                                    `
-                                        <tr>
-                                        <td><h3>${personne.nom}</h3></td>
-                                        <td width="60%"><h2>${guichet ? guichet.alpha : personne.guichet}${personne.numero.toString().padStart(3, '0')}</h2></td> 
-                                        <td><h5>${ personne.date_temps }</h5></td> 
-                                        <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet.id }"><h4>Fini</h4></a></td> 
-                                        </tr>          
-                                        
-                                    `
-                                );
-                            };
-
-                            if (personne.statut == "New"){
+                        
+                        personne_list.forEach(function(personne) {
+                            console.log("Personne traitée", personne);
+                            if (personne.statut == "Load" && personne.guichet == guichet_nom){
+                            $("#personne-list").append(
+                                `
+                                <tr>
+                                    <td><h3>${personne.nom}</h3></td>
+                                    <td width="60%"><h2>${g}${personne.numero.toString().padStart(3, '0')}</h2></td> 
+                                    <td><h5>${ personne.date_temps }</h5></td> 
+                                    <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet_nom }"><h4>Fini</h4></a></td> 
+                                </tr>          
+                                `
+                            );
+                            }
+                                if (personne.statut == "New" && personne.guichet == guichet_nom){
+                                console.log("Ajout à la liste 2", personne);
                                 $("#personne-list-2").append(
                                     `
                                         <tr>
-                                            <td><h3>${personne.nom}</h3></td>
-                                            <td width="60%"><h2>${guichet ? guichet.alpha : personne.guichet}${personne.numero.toString().padStart(3, '0')}</h2></td>
-                                            <td><h5>${ personne.date_temps }</h5></td>
-                                        </tr>
+                                        <td><h3>${personne.nom}</h3></td>
+                                        <td width="60%"><h2>${g}${personne.numero.toString().padStart(3, '0')}</h2></td> 
+                                        <td><h5>${ personne.date_temps }</h5></td> 
+                                        <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet_nom }"><h4>Fini</h4></a></td> 
+                                        </tr>          
                                     `
                                 );
-                            };
+                            }
                         });
                     },
                     error: function(xhr, status, error) {
-                        console.error("Erreur lors de la récupération des données : ", error);
+                        alert("Erreur lors de la récupération des données : " + xhr + " " + status + " " + error);
                     }
                 });
             }
         
-            // Appeler la fonction toutes les secondes (1000 millisecondes)
-            setInterval(updateData, 500);
+            setInterval(updateList, 3000);
         });
+        
         
         
     </script>

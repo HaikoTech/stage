@@ -10,8 +10,8 @@
 {% endif %}
 
 <div id="base_guichet">
+   <h1 id="affiche_date"><!-- Affiche date --></h1>
     <img width="100vh" src="{% static 'images/logo.png' %}" alt="Logo">
-    <h1 id="affiche_date"><!-- Affiche date --></h1>
     <h1>Guichet</h1>
     {% if admin_v == "False" %}
     <a href="#" class="ajout_guichet no-click">Ajout d'un guichet</a>
@@ -20,75 +20,33 @@
     {% endif %}
     <br>
     
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Alpha</th>
-            <th>Nom</th>
-            <th>ID Max</th>
-            <th>Nb Pers</th>
-            <th>Supprimer</th>
-            <th>Modifier</th>
-        </tr>
-    {% for g in g %}
-        <tr>
-            <td>{{ g.id }}</td>
-            <td>{{ g.alpha }}</td>
-            <td>{{ g.nom }}</td>
-            <td>{{ g.nb_now }}</td>
-            <td>{{ g.nb_personne }}</td>
-            {% if admin_v == "False" %}
-              <td><a href="#" class="action_link no-click">Supprimer</a></td>
-              <td><a href="#" class="action_link no-click">Modifier</a></td>
-            {% else %}
-              <td><a href="/suppr_guichet/{{ g.id }}" class="action_link">Supprimer</a></td>
-              <td><a href="/modif_guichet/{{ g.id }}" class="action_link">Modifier</a></td>
-            {% endif %}
-        </tr>
-    {% endfor %}
+    <table id="guichet_table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Alpha</th>
+                <th>Nom</th>
+                <th>ID Max</th>
+                <th>Nb Pers</th>
+                <th>Supprimer</th>
+                <th>Modifier</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Affiche Guichet -->
+        </tbody>
     </table>
     
 </div>
 
 <h1>Client en attente</h1>
+<div id="tables-container">
+  <!-- Affiche Client -->
+</div>
 
-{% for g in g %}
-    <h2>{{ g.nom }}</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Numéro</th>
-            <th>Guichet</th>
-            <th>Date</th>
-            <th>Statut</th>
-            <th>Supprimer</th>
-            <th>Modifier</th>
-        </tr>
-    {% for p in p %}
-        {% if p.guichet == g.nom %}
-            <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.nom }}</td>
-                <td>{{ p.numero }}</td>
-                <td>{{ p.guichet }}</td>
-                <td>{{ p.date_temps }}</td>
-                <td>{{ p.statut }}</td>
-                {% if admin_v == "False" %}
-                  <td><a href="#" class="action_link no-click">Supprimer</a></td>
-                  <td><a href="#" class="action_link no-click">Modifier</a></td>
-                {% else %}
-                  <td><a href="/suppr_personne_base/base/{{ p.id }}" class="action_link">Supprimer</a></td>
-                  <td><a href="/modif_personne/{{ p.id }}" class="action_link">Modifier</a></td>
-                {% endif %}
-            </tr>
-        {% endif %}
-    {% endfor %}
-    </table>
-{% endfor %}
 <script>
   $(document).ready(function(){
-    function updateData() {
+    function updateDate() {
         $.ajax({
             url: "{% url 'get_date_data' %}",
             method: "GET",
@@ -100,14 +58,102 @@
             error: function(xhr, status, error) {
                 console.error("Erreur lors de la récupération des données : ", error);
             }
-
-            
         });
     }
 
-    setInterval(updateData, 500);
-});
-  
+    function updateGuichet() {
+      $.ajax({
+          url: "{% url 'get_guichet' %}",
+          method: "GET",
+          success: function(data) {
+              $("#guichet_table tbody").empty();
+
+              data.forEach(function(g) {
+                  $("#guichet_table tbody").append(
+                      `
+                      <tr>
+                          <td>${g.id}</td>
+                          <td>${g.alpha}</td>
+                          <td>${g.nom}</td>
+                          <td>${g.nb_now}</td>
+                          <td>${g.nb_personne}</td>
+                          {% if admin_v == "False" %}
+                            <td><a href="#" class="action_link no-click">Supprimer</a></td>
+                            <td><a href="#" class="action_link no-click">Modifier</a></td>
+                          {% else %}
+                            <td><a href="/suppr_guichet/${g.id}" class="action_link">Supprimer</a></td>
+                            <td><a href="/modif_guichet/${g.id}" class="action_link">Modifier</a></td>
+                          {% endif %}
+                      </tr>
+                      `
+                  );
+              });
+          },
+          error: function(xhr, status, error) {
+              console.error("Erreur lors de la récupération des données : ", error);
+          }
+      });
+    }
+
+    function updateClient() {
+      $.ajax({
+        url: "{% url 'get_personne_data' %}",
+        method: 'GET',
+        success: function(data) {
+          $("#tables-container").empty();
+
+          var isAdmin = "{{admin_v}}";
+          
+          var clients = data.clients;
+          var guichets = data.guichets;
+          var guichetMap = {};
+          
+          guichets.forEach(function(g) {
+            guichetMap[g.nom] = [];
+          });
+          
+          clients.forEach(function(p) {
+            if (guichetMap[p.guichet]) {
+              guichetMap[p.guichet].push(p);
+            }
+          });
+          
+          Object.keys(guichetMap).forEach(function(guichetNom) {
+            var tableHtml = '<h2>' + guichetNom + '</h2>';
+            tableHtml += '<table id="client_table">';
+                tableHtml += '<thead><tr><th>ID</th><th>Nom</th><th>Numéro</th><th>Guichet</th><th>Date</th><th>Statut</th><th>Supprimer</th><th>Modifier</th></tr></thead>';
+                tableHtml += '<tbody>';
+                  
+                guichetMap[guichetNom].forEach(function(p) {
+                  tableHtml += '<tr>';
+                    tableHtml += '<td>' + p.id + '</td>';
+                    tableHtml += '<td>' + p.nom + '</td>';
+                    tableHtml += '<td>' + p.numero + '</td>';
+                    tableHtml += '<td>' + p.guichet + '</td>';
+                    tableHtml += '<td>' + p.date_temps + '</td>';
+                    tableHtml += '<td>' + p.statut + '</td>';
+                    if (!isAdmin) {
+                      tableHtml += '<td><a href="#" class="action_link no-click">Supprimer</a></td>';
+                      tableHtml += '<td><a href="#" class="action_link no-click">Modifier</a></td>';
+                    } else {
+                        tableHtml += '<td><a href="/suppr_personne_base/base/' + p.id + '" class="action_link">Supprimer</a></td>';
+                        tableHtml += '<td><a href="/modif_personne/' + p.id + '" class="action_link">Modifier</a></td>';
+                    }
+                    tableHtml += '</tr>';
+                });
+
+                tableHtml += '</tbody></table>';
+
+                $('#tables-container').append(tableHtml);
+            });
+        }
+    });
+    }
+
+    setInterval(updateDate, 1000);
+    setInterval(updateGuichet, 500);
+    setInterval(updateClient, 500);
+  });
 </script>
 <style>
     /* Style général pour la page */
@@ -135,11 +181,11 @@
     
     /* Style pour le lien d'ajout de guichet */
     .ajout_guichet {
+      text-align: left;
       text-decoration: none;
-      color: #28a745;
       font-weight: bold;
       display: inline-block;
-      margin-bottom: 20px;
+      margin-bottom: 5px;
     }
     
     .ajout_guichet:hover {

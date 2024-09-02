@@ -25,12 +25,33 @@ class Application():
         date = date.strftime("%d/%m/%Y %H:%M:%S")
 
         data = {
-            'p': personnes_list,
-            'g': guichets_list,
+            'clients': personnes_list,
+            'guichets': guichets_list,
             'date': date,
         }
 
         return JsonResponse(data, safe=False)
+    
+    @staticmethod
+    def get_guichet(request):
+        guichets = Guichet.objects.all().values()
+        guichets_list = list(guichets)
+        
+        return JsonResponse(guichets_list, safe=False)
+    
+    @staticmethod
+    def get_personne(request):
+        personne = Personne.objects.all().values()
+        personne_list = list(personne)
+
+        return JsonResponse(personne_list, safe=False)
+
+    @staticmethod
+    def get_admin(request):
+        admin = Admin.objects.all().values()
+        admin_list = list(admin)
+        
+        return JsonResponse(admin_list, safe=False)
     
     @staticmethod
     def get_date_data(request):
@@ -102,11 +123,13 @@ class Application():
 
         try:
             admin = Admin.objects.get(nom=nom, mdp=mdp)
-            print(admin.nom)
+            print("1")
             template = loader.get_template('base.html')
-            print("moi")
+            print("2")
             guichet = Guichet.objects.all().values()
+            print("3")
             pers = Personne.objects.all().values()
+            print("4")
 
             date = datetime.now()
             date = date.strftime("%d/%m/%Y %H:%M:%S")
@@ -119,8 +142,8 @@ class Application():
                 'admin_v': True,
             }
             return HttpResponse(template.render(context, request))  
-        except:
-            print("tong ato S except")
+        except Exception as e:
+            print(f"Erreur inattendue: {e}")
             template = loader.get_template('base_log.html')
             guichet = Guichet.objects.all().values()
             pers = Personne.objects.all().values()
@@ -539,7 +562,7 @@ class Application():
             'g': guichet,
             'p': pers,
             'p_now': p_now,
-            'p_if': p_if,
+            'p_load': p_if,
             'counter': range(len(pers)),
         }
         return HttpResponse(template.render(context, request))
