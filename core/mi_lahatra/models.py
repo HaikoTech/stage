@@ -12,6 +12,8 @@ class Guichet(models.Model):
     alpha = models.CharField(max_length=1, default="?")
     nb_now = models.IntegerField(default=0)
     nb_personne = models.IntegerField(default=0)
+    nom_util = models.CharField(max_length=255, default="")
+    mdp_util = models.CharField(max_length=255, default="")
 
 
     def __str__(self):

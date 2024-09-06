@@ -12,6 +12,8 @@ from mi_lahatra.models import Admin
 
 from datetime import *
 
+import openpyxl
+
 
 class Application():
         
@@ -87,6 +89,8 @@ class Application():
         template = loader.get_template('base.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
+
+        
 
         date = datetime.now()
         date = date.strftime("%d/%m/%Y %H:%M:%S")
@@ -280,13 +284,24 @@ class Application():
 
         fin = f"{guichet.alpha}{pers.numero:03}"
          
-        template = loader.get_template('main.html')
+        template = loader.get_template('numero.html')
         guichet = Guichet.objects.all().values()
         pers = Personne.objects.all().values()
         context = {
             'g': guichet,
             'p': pers,
             'fin': fin,
+        }
+        return HttpResponse(template.render(context, request))
+    
+    @staticmethod
+    def main(request):         
+        template = loader.get_template('main.html')
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+        context = {
+            'g': guichet,
+            'p': pers,
         }
         return HttpResponse(template.render(context, request))
     
@@ -310,7 +325,7 @@ class Application():
     @staticmethod
     def ajout_guichet_ajout(request):
         x = request.POST['input_nom']
-        a = request.POST['input_alpha']
+        a = request.POST['input_guichet']
         gui = Guichet(nom=x, alpha=a)
         gui.save()
         
@@ -337,11 +352,8 @@ class Application():
             pe.statut = "End"
             pe.save()
 
-            # vraie_guichet.nb_personne -= 1
-            # if vraie_guichet.nb_personne <= 0:
-            #     vraie_guichet.nb_now = 0
-
-            # vraie_guichet.save()
+            vraie_guichet.nb_personne -= 1
+            vraie_guichet.save()
         except:
             pass
 
@@ -567,3 +579,23 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
 
+    @staticmethod
+    def export(request):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Personnes"
+
+        ws.append(["Nom", "Guichet", "Numéro", "Date et Temps", "Statut"])
+
+        personnes = Personne.objects.all()
+
+        for personne in personnes:
+            ws.append([personne.nom, personne.guichet, personne.numero, personne.date_temps, personne.statut])
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=mi-lahatra.xlsx'
+
+        wb.save(response)
+        print("exportation fini_2")
+
+        return response

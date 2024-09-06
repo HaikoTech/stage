@@ -13,13 +13,6 @@
       <td style="padding: 0;"><img width="100vh" src="{% static 'images/logo.png' %}" alt="Logo"></td>
     </tr>
   </table>
-  
-
-  {% if fin and fin != "" %}
-  <script>
-    alert("Merci de votre patience, nous vous appellerons bientôt par ce numéro:\n\n{{ fin }}")
-  </script>
-  {% endif %}
 
   <h3>Entrer votre nom</h3>
 
@@ -36,7 +29,7 @@
     </select>
 
     <br><br>
-    <input class="submit" type="submit" value="Envoyer">
+    <input class="submit" onclick="imprimer()" type="submit" value="Envoyer">
   </form>
 </div>
 
@@ -118,10 +111,11 @@
   }
 </style>
 <script>
+  function imprimer(){
+    windows.print();
+  }
   $(document).ready(function(){
-    a = 1;
-    b = 2;
-    c = a + b;
+    console.log("AJAX Marche");
 });
 </script>
 {% endblock %}

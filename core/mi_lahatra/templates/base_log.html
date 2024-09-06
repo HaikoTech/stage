@@ -6,7 +6,7 @@
 
 {% block content %}
 <div id="tout">
-  <a href="/base_view/False" class="retour">Annuler</a>
+  {% comment %} <a href="/base_view/False" class="retour">Annuler</a> {% endcomment %}
 
 
   <h1 id="bienvenue">Administrateur</h1>
@@ -25,7 +25,6 @@
 
     {% if admin_v == False %}
         <p style="color:red">Mot de passe ou Nom incorrect<p>
-        <p style="color:red">Cliquez sur <strong>Annuler</strong> si vous n'êtes pas un administrateur.<p>
     {% endif %}
 
     <br><br>

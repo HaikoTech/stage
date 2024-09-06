@@ -1,17 +1,25 @@
 {% extends "index.html" %}
 
 {% block title %}
-  mi_lahatra
+  mi_lahatra test
 {% endblock %}
 
 
 {% block content %}
 
-<div>
-    {{ date_time }}
-</div>
-<div>
-    {{ date }}
-</div>
+<script>
+// Create WebSocket connection.
+const socket = new WebSocket("http://localhost:8000");
 
+// Connection opened
+socket.addEventListener("open", (event) => {
+  socket.send("Hello Server!");
+});
+
+// Listen for messages
+socket.addEventListener("message", (event) => {
+  console.log("Message from server ", event.data);
+});
+);
+</script>
 {% endblock %}

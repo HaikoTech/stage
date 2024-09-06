@@ -13,6 +13,7 @@ urlpatterns = [
     path('base_change_v', app.base_c_v),
 
     path('ajouter_personne', app.ajout_pers),
+    path('main', app.main),
     path('ajouter_guichet', app.ajout_guichet),
     path('ajouter_guichet/ajouter', app.ajout_guichet_ajout),
 
@@ -31,6 +32,8 @@ urlpatterns = [
 
     path('guichet', app.guichet),
     path('guichet/<int:id>', app.guichet_id),
+
+    path('export/', app.export),
 
     # 
 

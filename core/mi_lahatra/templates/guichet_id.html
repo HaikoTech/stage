@@ -58,10 +58,13 @@
         </table>
     </div>
     <script>
+
         $(document).ready(function(){
             function updateList() {
                 var g = "{{ g }}";
                 var guichet_nom = "{{ g.nom }}";
+                var guichet_id = "{{ g.id }}";
+                var guichet_alpha = "{{ g.alpha }}";
                 var p = "{{ p }}";
                 var p_now = "{{ p_now }}";
                 var p_load = "{{ p_load }}";
@@ -81,9 +84,9 @@
                                 `
                                 <tr>
                                     <td><h3>${personne.nom}</h3></td>
-                                    <td width="60%"><h2>${g}${personne.numero.toString().padStart(3, '0')}</h2></td> 
+                                    <td width="60%"><h2>${guichet_alpha}${personne.numero.toString().padStart(3, '0')}</h2></td> 
                                     <td><h5>${ personne.date_temps }</h5></td> 
-                                    <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet_nom }"><h4>Fini</h4></a></td> 
+                                    <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet_id }"><h4>Fini</h4></a></td> 
                                 </tr>          
                                 `
                             );
@@ -94,9 +97,8 @@
                                     `
                                         <tr>
                                         <td><h3>${personne.nom}</h3></td>
-                                        <td width="60%"><h2>${g}${personne.numero.toString().padStart(3, '0')}</h2></td> 
+                                        <td width="60%"><h2>${guichet_alpha}${personne.numero.toString().padStart(3, '0')}</h2></td> 
                                         <td><h5>${ personne.date_temps }</h5></td> 
-                                        <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet_nom }"><h4>Fini</h4></a></td> 
                                         </tr>          
                                     `
                                 );
@@ -109,7 +111,7 @@
                 });
             }
         
-            setInterval(updateList, 3000);
+            setInterval(updateList, 500);
         });
         
         

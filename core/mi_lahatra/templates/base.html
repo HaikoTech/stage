@@ -9,15 +9,17 @@
 </div>
 {% endif %}
 
+<a href="/export" id="export">Exporter en fichier excel</a>
 <div id="base_guichet">
    <h1 id="affiche_date"><!-- Affiche date --></h1>
     <img width="100vh" src="{% static 'images/logo.png' %}" alt="Logo">
     <h1>Guichet</h1>
     {% if admin_v == "False" %}
-    <a href="#" class="ajout_guichet no-click">Ajout d'un guichet</a>
+    <a href="/ajouter_guichet" class="ajout_guichet">Ajout d'un guichet</a>
     {% else %}
     <a href="/ajouter_guichet" class="ajout_guichet">Ajout d'un guichet</a>
     {% endif %}
+    
     <br>
     
     <table id="guichet_table">
@@ -77,13 +79,8 @@
                           <td>${g.nom}</td>
                           <td>${g.nb_now}</td>
                           <td>${g.nb_personne}</td>
-                          {% if admin_v == "False" %}
-                            <td><a href="#" class="action_link no-click">Supprimer</a></td>
-                            <td><a href="#" class="action_link no-click">Modifier</a></td>
-                          {% else %}
-                            <td><a href="/suppr_guichet/${g.id}" class="action_link">Supprimer</a></td>
-                            <td><a href="/modif_guichet/${g.id}" class="action_link">Modifier</a></td>
-                          {% endif %}
+                          <td><a href="/suppr_guichet/${g.id}" class="action_link">Supprimer</a></td>
+                          <td><a href="/modif_guichet/${g.id}" class="action_link">Modifier</a></td>
                       </tr>
                       `
                   );
@@ -132,13 +129,8 @@
                     tableHtml += '<td>' + p.guichet + '</td>';
                     tableHtml += '<td>' + p.date_temps + '</td>';
                     tableHtml += '<td>' + p.statut + '</td>';
-                    if (!isAdmin) {
-                      tableHtml += '<td><a href="#" class="action_link no-click">Supprimer</a></td>';
-                      tableHtml += '<td><a href="#" class="action_link no-click">Modifier</a></td>';
-                    } else {
-                        tableHtml += '<td><a href="/suppr_personne_base/base/' + p.id + '" class="action_link">Supprimer</a></td>';
-                        tableHtml += '<td><a href="/modif_personne/' + p.id + '" class="action_link">Modifier</a></td>';
-                    }
+                    tableHtml += '<td><a href="/suppr_personne_base/base/' + p.id + '" class="action_link">Supprimer</a></td>';
+                    tableHtml += '<td><a href="/modif_personne/' + p.id + '" class="action_link">Modifier</a></td>';
                     tableHtml += '</tr>';
                 });
 
@@ -243,7 +235,7 @@
     /* Style pour les liens dans les tableaux */
     .action_link {
       color: #28a745;
-      text-decoration: none;
+      text-decoration: none;text-align: flex;
     }
     
     .action_link:hover {
@@ -261,6 +253,11 @@
       pointer-events: auto;
       cursor: not-allowed;
       color: gray;
+      text-decoration: none;
+    }
+    #export{
+      display: flex;
+      justify-content: right;
       text-decoration: none;
     }
     

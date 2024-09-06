@@ -1,0 +1,119 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+  mi_lahatra
+{% endblock %}
+
+{% block content %}
+<meta http-equiv="refresh" content="10; url=main">
+<div id="tout">
+  <table width="100%" class="bienvenue">
+    <tr>
+      <td>
+        <div id="merci">Merci de votre patience</div>
+        <div id="num">votre numéro est le</div>
+        <div id="fin">{{ fin }}</div>
+        </td> 
+      <td style="padding: 0;"><img width="100vh" src="{% static 'images/logo.png' %}" alt="Logo"></td>
+    </tr>
+  </table>
+
+<style>
+  /* Style général pour la page */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    color: #495057;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  }
+
+  /* Conteneur principal */
+  #tout {
+    width: 90%;
+    max-width: 700px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Style pour le titre principal */
+  .bienvenue {
+    color: #ffffff;
+    background-color: #28a745; /* Couleur verte */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* Style pour les titres de section */
+  h3 {
+    color: #28a745; /* Couleur verte pour les titres */
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+
+  /* Style pour les champs de formulaire */
+  .input_main {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  /* Style pour le bouton de soumission */
+  .submit {
+    background-color: #28a745; /* Couleur verte */
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .submit:hover {
+    background-color: #218838; /* Couleur verte plus foncée au survol */
+  }
+
+  /* Ajouter un peu d'espace avant le formulaire */
+  form {
+    margin-top: 30px;
+  }
+  #merci{
+    font-size: 4vh;
+    margin: 5px;
+  }
+  #num{
+    font-size: 3vh;
+  }
+  #fin{
+    color: #ffff00;
+    font-size: 10vh;
+  }
+</style>
+<script>
+  function imprimer(){
+    console.log("print");
+    windows.print();
+  }
+  $(document).ready(function(){
+    console.log("AJAX Marche");
+});
+</script>
+{% endblock %}
