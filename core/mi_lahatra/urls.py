@@ -30,6 +30,8 @@ urlpatterns = [
 
     path('test', app.test),
 
+    path('change_day/<str:page>', app.change_day),
+
     path('guichet', app.guichet),
     path('guichet/<int:id>', app.guichet_id),
 
@@ -37,7 +39,7 @@ urlpatterns = [
 
     # 
 
-    path('api/personnes/', app.get_personne_data, name='get_personne_data'),
+    path('api/personnes/', app.get_all_data, name='get_personne_data'),
     path('api/date/', app.get_date_data, name='get_date_data'),
     path('api/guichet/', app.get_guichet, name='get_guichet'),
     path('api/personne/', app.get_personne, name='get_personne'),

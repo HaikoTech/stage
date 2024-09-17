@@ -16,24 +16,75 @@ import openpyxl
 
 
 class Application():
-        
+
+    @staticmethod   
+    def get_date(request):
+        date_base = Date.objects.all().values()
+        date_list = list(date_base)
+
+        return JsonResponse(date_list, safe=False)
+    
+
     @staticmethod
-    def get_personne_data(request):
-        personnes = Personne.objects.all().values()
-        personnes_list = list(personnes)
-        guichets = Guichet.objects.all().values()
-        guichets_list = list(guichets)
+    def change_day(request, page):
         date = datetime.now()
-        date = date.strftime("%d/%m/%Y %H:%M:%S")
+        date_str = date.strftime("%Y-%m-%d")
+
+        date_base = Date.objects.get(id=1)
+        date_base.valeur = date_str
+
+        Guichet.objects.update(nb_now=0, nb_personne=0)
+
+        template = loader.get_template(page)
+        guichet = Guichet.objects.all().values()
+        pers = Personne.objects.all().values()
+        context = {
+            'g': guichet,
+            'p': pers,
+            'admin_v': False,
+        }
+        return HttpResponse(template.render(context, request))
+
+    @staticmethod
+    def get_all_data(request):
+        personnes = Personne.objects.all().values()
+        personne_list = list(personnes)
+        guichet = Guichet.objects.all().values()
+        guichet_list = list(guichet)
 
         data = {
-            'clients': personnes_list,
-            'guichets': guichets_list,
+            'clients': personne_list,
+            'guichets': guichet_list,
             'date': date,
         }
 
         return JsonResponse(data, safe=False)
     
+
+    @staticmethod
+    def get_personne(request):
+        personnes = Personne.objects.all().values()
+        personne_list = list(personnes)
+
+        return JsonResponse(personne_list, safe=False)
+    
+
+    @staticmethod
+    def get_guichet(request):
+        guichet = Guichet.objects.all().values()
+        guichet_list = list(guichet)
+
+        return JsonResponse(guichet_list, safe=False)
+    
+
+    @staticmethod
+    def get_admin(request):
+        admin = Admin.objects.all().values()
+        admin_list = list(admin)
+
+        return JsonResponse(admin_list, safe=False)
+    
+
     @staticmethod
     def get_guichet(request):
         guichets = Guichet.objects.all().values()
@@ -62,6 +113,7 @@ class Application():
 
         return JsonResponse({'date': date_str})
         
+
     @staticmethod
     def attente(request):
         template = loader.get_template('main.html')
@@ -73,6 +125,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def attente_main(request):
         template = loader.get_template('attente.html')
@@ -84,6 +137,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def base(request, admin):
         template = loader.get_template('base.html')
@@ -104,6 +158,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
 
+
     @staticmethod
     def base_log(request):
         template = loader.get_template('base_log.html')
@@ -120,6 +175,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def base_v(request):
         nom = request.POST['nom']
@@ -181,6 +237,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def base_c_v(request):
         nom = request.POST['nom']
@@ -266,6 +323,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def ajout_pers(request):
         x = request.POST['input_nom']
@@ -294,6 +352,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def main(request):         
         template = loader.get_template('main.html')
@@ -319,9 +378,11 @@ class Application():
             'g': guichet,
             'p': pers,
             'alpha': a_filtered,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def ajout_guichet_ajout(request):
         x = request.POST['input_nom']
@@ -335,9 +396,11 @@ class Application():
         context = {
             'g': guichet,
             'p': pers,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def suppr_personne(request, page, fini, id_guich):
         try:
@@ -382,10 +445,11 @@ class Application():
             'g': vraie_guichet,
             'p': pers,
             'p_now': p_now,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
 
-    
+
     @staticmethod
     def suppr_personne_page(request, page, id):
         template = loader.get_template(page+".html")
@@ -400,9 +464,11 @@ class Application():
             'g': guichet,
             'p': pers,
             'p_now': p_now,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def suppr_personne_base(request, page, id):
         pers = Personne.objects.get(id=id)
@@ -434,6 +500,7 @@ class Application():
                 'g': guichet,
                 'p': pers,
                 'p_now': p_now,
+                'admin_v': True,
             }
         else:
             guichet = Guichet.objects.all().values()
@@ -441,12 +508,11 @@ class Application():
             context = {
                 'g': guichet,
                 'p': pers,
+                'admin_v': True,
             }
         return HttpResponse(template.render(context, request))
     
 
-
-    
     @staticmethod
     def suppr_guichet(request, id):
         gui = Guichet.objects.get(id=id)
@@ -460,9 +526,11 @@ class Application():
         context = {
             'g': guichet,
             'p': pers,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def modif_guichet(request, id):
         mymember = Guichet.objects.get(id=id)
@@ -476,9 +544,11 @@ class Application():
         context = {
             'g': mymember,
             'alpha': a_filtered,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def modif_guichet_m(request, id):
         nom_2 = ""
@@ -495,6 +565,7 @@ class Application():
             template = loader.get_template('modif_guichet.html')
             context = {
                 'g': mymember,
+                'admin_v': True,
             }
             return HttpResponse(template.render(context, request))
 
@@ -521,15 +592,20 @@ class Application():
             }
             return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def modif_personne(request, id):
         mymember = Personne.objects.get(id=id)
         template = loader.get_template('modif_personne.html')
+        guichet = Guichet.objects.all().values()
         context = {
             'p': mymember,
+            'g': guichet,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def modif_personne_m(request, id):
         nom = request.POST['nom']
@@ -547,9 +623,11 @@ class Application():
         context = {
             'g': guichet,
             'p': pers,
+            'admin_v': True,
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def guichet(request):
         template = loader.get_template('guichet.html')
@@ -561,6 +639,7 @@ class Application():
         }
         return HttpResponse(template.render(context, request))
     
+
     @staticmethod
     def guichet_id(request, id):
         template = loader.get_template('guichet_id.html')
