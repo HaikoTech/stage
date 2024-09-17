@@ -17,7 +17,11 @@ mi_lahatra
           </div>
           <div class="form-group">
               <label for="guichet">Guichet:</label><br>
-              <input id="guichet" name="guichet" value="{{ p.guichet }}" class="input-field">
+              <select id="guichet" class="input-field" name="guichet" value="{{ p.guichet }}">
+                {% for g in g %}
+                <option value="{{ g.nom }}">{{ g.nom }}</option>
+                {% endfor %}
+              </select>
           </div>
           <div class="form-group">
               <label for="numero">Numéro:</label><br>
