@@ -17,12 +17,12 @@
                 {% for p in p %}
                     {% if p.statut == "Load" %}
                         <div id="personne-list">
-                            <tr>
+                            {% comment %} <tr>
                                 <td><h3>{{p.nom}}</h3></td>
                                 <td width="60%"><h2>{{ g.alpha }}{{ p.numero|stringformat:"03d" }}</h2></td> 
                                 <td><h5>{{ p.date_temps }}</h5></td> 
                                 <td width="20%"><a href="/suppr_personne/guichet_id/0/{{ g.id }}"><h4>Fini</h4></a></td> 
-                            </tr>   
+                            </tr>    {% endcomment %}
                         </div>
                     {% endif %}
                 {% empty %}
@@ -73,23 +73,23 @@
                 var p = "{{ p }}";
                 var p_now = "{{ p_now }}";
                 var p_load = "{{ p_load }}";
-                console.log("Début de updateList");
+                console.log("Début de updateList | guichet_nom: " + guichet_nom);
+
                 $.ajax({
-                    url: "{% url 'get_personne' %}",
+                    url: "{% url 'get_all_data' %}",
                     method: "GET",
                     success: function(data) {
-                        // Vider la liste existante avant d'ajouter de nouvelles données
                         $("#personne-list").empty();
                         $("#personne-list-2").empty();
+                        
+                        console.log("data" + data)
+
+                        var personnes = data.clients;
+                        var guichets = data.guichets;
         
-                        // Vérifiez si les données contiennent bien 'p' pour les personnes
-                        var personnes = data.p;
-                        var guichets = data.g;
-        
-                        // Itérez sur les listes de personnes
                         personnes.forEach(function(personne) {
-                            var guichet = guichets.find(g => g.nom === personne.guichet);  // Recherche le guichet par nom
-                            if (personne.statut == "Load"){
+                            var guichet = guichets.find(g => g.nom === personne.guichet);
+                            if (personne.statut == "Load" && personne.guichet == guichet_nom){
                                 $("#personne-list").append(
                                     `
                                         <tr>
@@ -97,7 +97,7 @@
                                         <td width="60%"><h2>${guichet ? guichet.alpha : personne.guichet}${personne.numero.toString().padStart(3, '0')}</h2></td> 
                                         <td><h5>${ personne.date_temps }</h5></td> 
                                         <td width="20%"><a href="/suppr_personne/guichet_id/0/${ guichet.id }"><h4>Fini</h4></a></td> 
-                                        </tr>          
+                                        </tr>
                                         
                                     `
                                 );
@@ -122,8 +122,7 @@
                 });
             }
         
-            // Appeler la fonction toutes les secondes (1000 millisecondes)
-            setInterval(updateData, 500);
+            setInterval(updateList, 500);
         });
         
         

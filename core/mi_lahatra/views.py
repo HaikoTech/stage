@@ -55,7 +55,6 @@ class Application():
         data = {
             'clients': personne_list,
             'guichets': guichet_list,
-            'date': date,
         }
 
         return JsonResponse(data, safe=False)
@@ -110,8 +109,9 @@ class Application():
     def get_date_data(request):
         date = datetime.now()
         date_str = date.strftime("%d/%m/%Y %H:%M:%S")
+        print("1")
 
-        return JsonResponse({'date': date_str})
+        return JsonResponse(date_str, safe=False)
         
 
     @staticmethod
@@ -183,13 +183,9 @@ class Application():
 
         try:
             admin = Admin.objects.get(nom=nom, mdp=mdp)
-            print("1")
             template = loader.get_template('base.html')
-            print("2")
             guichet = Guichet.objects.all().values()
-            print("3")
             pers = Personne.objects.all().values()
-            print("4")
 
             date = datetime.now()
             date = date.strftime("%d/%m/%Y %H:%M:%S")
@@ -416,6 +412,9 @@ class Application():
             pe.save()
 
             vraie_guichet.nb_personne -= 1
+            if vraie_guichet.nb_personne <= 0 :
+                vraie_guichet.nb_now = 0
+                
             vraie_guichet.save()
         except:
             pass

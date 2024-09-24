@@ -23,7 +23,7 @@
     <br>
     
     <table>
-        <theada>
+        <thead>
             <th>ID</th>
             <th>Alpha</th>
             <th>Nom</th>
@@ -47,280 +47,107 @@
   <!-- Affiche Client -->
 </div>
 
-{% for g in g %}
-    <h2>{{ g.nom }}</h2>
-    <table>
-      <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Numéro</th>
-            <th>Guichet</th>
-            <th>Date</th>
-            <th>Statut</th>
-            <th>Supprimer</th>
-            <th>Modifier</th>
-        </tr>
-      </thead>
-      <tbody id="personne_{{g.nom}}">
-
-      </tbody>
-    </table>
-{% endfor %}
 <script>
   $(document).ready(function() {
     function updateDate() {
-        $.ajax({
-            url: "{% url 'get_date_data' %}",
-            method: "GET",
-            success: function(data) {
-                var date = data.date;
-                $("#affiche_date").html(date);
-            },
-            error: function(xhr, status, error) {
-                console.error("Erreur lors de la récupération des données : ", error);
-            }
-        });
+      $.ajax({
+        url: "{% url 'get_date_data' %}",
+        method: "GET",
+        success: function(data) {
+          var date = data;
+          $("#affiche_date").html(date);
+        },
+        error: function(xhr, status, error) {
+          console.error("(1) Erreur lors de la récupération de la date : ", error);
+        }
+      });
     }
 
     function updateGuichet() {
       $.ajax({
-          url: "{% url 'get_guichet' %}",
-          method: "GET",
-          success: function(data) {
-              $("#guichet_table tbody").empty();
-
-              data.forEach(function(g) {
-                  $("#guichet_table tbody").append(
-                      `
-                      <tr>
-                          <td>${g.id}</td>
-                          <td>${g.alpha}</td>
-                          <td>${g.nom}</td>
-                          <td>${g.nb_now}</td>
-                          <td>${g.nb_personne}</td>
-                          <td><a href="/suppr_guichet/${g.id}" class="action_link">Supprimer</a></td>
-                          <td><a href="/modif_guichet/${g.id}" class="action_link">Modifier</a></td>
-                      </tr>
-                      `
-                  );
-              });
-          },
-          error: function(xhr, status, error) {
-              console.error("Erreur lors de la récupération des données : ", error);
-          }
+        url: "{% url 'get_guichet' %}",
+        method: "GET",
+        success: function(data) {
+          $("#guich").empty();
+          
+          data.forEach(function(g) {
+            $("#guich").append(
+              `
+              <tr>
+                <td>${g.id}</td>
+                <td>${g.alpha}</td>
+                <td>${g.nom}</td>
+                <td>${g.nb_now}</td>
+                <td>${g.nb_personne}</td>
+                <td><a href="/suppr_guichet/${g.id}" class="action_link">Supprimer</a></td>
+                <td><a href="/modif_guichet/${g.id}" class="action_link">Modifier</a></td>
+              </tr>
+              `
+            );
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error("(2) Erreur lors de la récupération des guichets : ", error);
+        }
       });
     }
 
     function updateClient() {
       $.ajax({
-        url: "{% url 'get_personne_data' %}",
+        url: "{% url 'get_all_data' %}",
         method: 'GET',
         success: function(data) {
           $("#tables-container").empty();
 
-          var isAdmin = "{{admin_v}}";
-          
           var clients = data.clients;
           var guichets = data.guichets;
           var guichetMap = {};
-          
+
           guichets.forEach(function(g) {
             guichetMap[g.nom] = [];
           });
-          
+
           clients.forEach(function(p) {
             if (guichetMap[p.guichet]) {
               guichetMap[p.guichet].push(p);
             }
           });
-          
+
           Object.keys(guichetMap).forEach(function(guichetNom) {
             var tableHtml = '<h2>' + guichetNom + '</h2>';
-            tableHtml += '<table id="client_table">';
-                tableHtml += '<thead><tr><th>ID</th><th>Nom</th><th>Numéro</th><th>Guichet</th><th>Date</th><th>Statut</th><th>Supprimer</th><th>Modifier</th></tr></thead>';
-                tableHtml += '<tbody>';
-                  
-                guichetMap[guichetNom].forEach(function(p) {
-                  tableHtml += '<tr>';
-                    tableHtml += '<td>' + p.id + '</td>';
-                    tableHtml += '<td>' + p.nom + '</td>';
-                    tableHtml += '<td>' + p.numero + '</td>';
-                    tableHtml += '<td>' + p.guichet + '</td>';
-                    tableHtml += '<td>' + p.date_temps + '</td>';
-                    tableHtml += '<td>' + p.statut + '</td>';
-                    tableHtml += '<td><a href="/suppr_personne_base/base/' + p.id + '" class="action_link">Supprimer</a></td>';
-                    tableHtml += '<td><a href="/modif_personne/' + p.id + '" class="action_link">Modifier</a></td>';
-                    tableHtml += '</tr>';
-                });
+            tableHtml += '<table>';
+            tableHtml += '<thead><tr><th>ID</th><th>Nom</th><th>Numéro</th><th>Guichet</th><th>Date</th><th>Statut</th><th>Supprimer</th><th>Modifier</th></tr></thead>';
+            tableHtml += '<tbody id="personne_' + guichetNom + '">';
 
-                tableHtml += '</tbody></table>';
-
-                $('#tables-container').append(tableHtml);
+            guichetMap[guichetNom].forEach(function(p) {
+              tableHtml += '<tr>';
+              tableHtml += '<td>' + p.id + '</td>';
+              tableHtml += '<td>' + p.nom + '</td>';
+              tableHtml += '<td>' + p.numero + '</td>';
+              tableHtml += '<td>' + p.guichet + '</td>';
+              tableHtml += '<td>' + p.date_temps + '</td>';
+              tableHtml += '<td>' + p.statut + '</td>';
+              tableHtml += '<td><a href="/suppr_personne_base/base/' + p.id + '" class="action_link">Supprimer</a></td>';
+              tableHtml += '<td><a href="/modif_personne/' + p.id + '" class="action_link">Modifier</a></td>';
+              tableHtml += '</tr>';
             });
+
+            tableHtml += '</tbody></table>';
+            $('#tables-container').append(tableHtml);
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error("(3) Erreur lors de la récupération des clients : ", error);
         }
-    });
-    }
-
-    setInterval(updateDate, 1000);
-    setInterval(updateGuichet, 500);
-    setInterval(updateClient, 500);
-  });
-        $.ajax({
-            url: "{% url 'get_guichet' %}",
-            method: "GET",
-            success: function(data) {
-                $("#guich").html("");
-                var admin_v = "{{ admin_v }}";
-                let actionLinks = admin_v == "True" 
-                    ? g => `
-                        <td><a href="/suppr_guichet/${g.id}" class="action_link">Supprimer</a></td>
-                        <td><a href="/modif_guichet/${g.id}" class="action_link">Modifier</a></td>
-                      `
-                    : g => `
-                        <td><a href="#" class="action_link no-click">Supprimer</a></td>
-                        <td><a href="#" class="action_link no-click">Modifier</a></td>
-                      `;
-                data.forEach(g => {
-                    $("#guich").append(`
-                        <tr>
-                            <td>${g.id}</td>
-                            <td>${g.alpha}</td>
-                            <td>${g.nom}</td>
-                            <td>${g.nb_now}</td>
-                            <td>${g.nb_personne}</td>
-                            ${actionLinks(g)}
-                        </tr>
-                    `);
-                });
-            },
-            error: function(xhr, status, error) {
-                alert("Erreur lors de la récupération des données : " + error);
-            }
-        });
-    }
-
-    function updatePersonneGuichet() {
-        $.ajax({
-            url: "{% url 'get_guichet' %}",
-            method: "GET",
-            success: function(data) {
-                $("#pers").html("");
-                var admin_v = "{{ admin_v }}";
-
-                let actionLinks = admin_v == "True" 
-                    ? p => `
-                        <td><a href="/suppr_personne_base/base/${p.id}" class="action_link">Supprimer</a></td>
-                        <td><a href="/modif_personne/${p.id}" class="action_link">Modifier</a></td>
-                      `
-                    : p => `
-                        <td><a href="#" class="action_link no-click">Supprimer</a></td>
-                        <td><a href="#" class="action_link no-click">Modifier</a></td>
-                      `;
-
-                data.forEach(g => {
-
-                    // Charger les personnes pour chaque guichet
-                    $.ajax({
-                        url: "{% url 'get_personne' %}",
-                        method: "GET",
-                        success: function(d) {
-                            $(`#personne_${g.nom}`).html("");
-                            d.forEach(p => {
-                                if (p.guichet == g.nom) {
-                                    $(`#personne_${g.nom}`).append(`
-                                        <tr>
-                                            <td>${p.id}</td>
-                                            <td>${p.nom}</td>
-                                            <td>${p.numero}</td>
-                                            <td>${p.guichet}</td>
-                                            <td>${p.date_temps}</td>
-                                            <td>${p.statut}</td>
-                                            ${actionLinks(p)}
-                                        </tr>
-                                    `);
-                                }
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            alert("Erreur lors de la récupération des données : " + error);
-                        }
-                    });
-                });
-            },
-            error: function(xhr, status, error) {
-                alert("Erreur lors de la récupération des données : " + error);
-            }
-        });
-    }
-
-    function updatePersonne() {
-        $.ajax({
-            url: "{% url 'get_personne' %}",
-            method: "GET",
-            success: function(data) {
-                $("#personne").html("");
-                var admin_v = "{{ admin_v }}";
-                let actionLinks = admin_v == "True" 
-                    ? g => `
-                        <td><a href="/suppr_personne_base/base/${g.id}" class="action_link">Supprimer</a></td>
-                        <td><a href="/modif_personne/${g.id}" class="action_link">Modifier</a></td>
-                      `
-                    : g => `
-                        <td><a href="#" class="action_link no-click">Supprimer</a></td>
-                        <td><a href="#" class="action_link no-click">Modifier</a></td>
-                      `;
-                data.forEach(g => {
-                    $("#personne").append(`
-                        <tr>
-                            <td>${g.id}</td>
-                            <td>${g.nom}</td>
-                            <td>${g.numero}</td>
-                            <td>${g.guichet}</td>
-                            <td>${g.date_temps}</td>
-                            <td>${g.statut}</td>
-                            ${actionLinks(g)}
-                        </tr>
-                    `);
-                });
-            },
-            error: function(xhr, status, error) {
-                alert("Erreur lors de la récupération des données : " + error);
-            }
-        });
-    }
-    function verifyDate() {
-      $.ajax({
-          url: "{% url 'get_date' %}",
-          method: 'GET',
-          success: function(data) {
-              // Obtenir la date actuelle en JavaScript
-              let today = new Date();
-              let date_str = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
-  
-              // Parcourir les données reçues
-              data.forEach(function(item) {
-                  if (item.valeur != date_str) {
-                      window.location.assign('/change_day/base.html');
-                  }
-              });
-          },
-          error: function(xhr, status, error) {
-              alert("Erreur lors de la récupération des données : " + error);
-          }
       });
-  }
-  
+    }
 
-    setInterval(verifyDate, 500);
-    setInterval(updateDate, 500);
+    setInterval(updateDate, 1000); 
     setInterval(updateGuichet, 500);
-    setInterval(updatePersonneGuichet, 500);
-    setInterval(updatePersonne, 500);
-});
-
-  
+    setInterval(updateClient, 500); 
+  });
 </script>
+
 <style>
     /* Style général pour la page */
     body {
